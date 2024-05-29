@@ -37,7 +37,7 @@ def getSQfield(lat, lon, year, month, day, hour=0, minutes=0, h = 0):
     Input:
         Latitude, lat (in WGS-84 coordinates)
         Longtitude, lon
-        An array of year, year (Only good between 2014.0 and 2020.0
+        An array of year, year (Only good between 2014.0 and 2024.0
         An array of months, month
         An array of days, day
         
@@ -59,7 +59,7 @@ def getSQfield(lat, lon, year, month, day, hour=0, minutes=0, h = 0):
         if sq_t[i] < start_time:
             raise Exception("Request before 2014.0 reached difi calculation improperly")
         elif sq_t[i] > end_time:
-            raise Exception("Request after 2021.0 reached difi calculation improperly")
+            raise Exception("Request after 2024.0 reached difi calculation improperly")
         while sq_t[i] < 5114.0:
             sq_t[i] += 365
         j = 0
