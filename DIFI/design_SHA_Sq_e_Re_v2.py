@@ -3,15 +3,15 @@ import numpy as np
 #from scipy import special
 import math
 import legendre
-# 
+#
 
-    
+
 def design_SHA_Sq_e_Re_v2(rho,theta,phi,t,t_ut,nmax,mmax,p_vec,s_vec):
 
 
     # [A_r, A_theta, A_phi] = design_SHA_Sq_e_Re_v2(rho,theta,phi,t,t_ut,...
 #    nmax,mmax,p_vec,s_vec);
-    
+
     # Calculate design matrices A_i that connects the vector of REAL,
 # Schmidt-normalized, spherical harmonic expansion coefficients,
 #        x = q_{nsp}^{m} and s_{nsp}^{m}
@@ -20,19 +20,19 @@ def design_SHA_Sq_e_Re_v2(rho,theta,phi,t,t_ut,nmax,mmax,p_vec,s_vec):
 #        B_theta = x'*A_theta
 #        B_phi   = x'*A_phi
 # for the region below (primary) Sq currents.
-    
+
     # Inputs:   rho(:)                  radius [units of reference radius]
 #           theta(:), phi(:)        co-latitude, longitude [deg]
 #           t(:), t_ut(:)           time [yr]; UT [h]
 #           nmax, mmax              maximum degree and order
 #           p_vec(:)                diurnal wavenumbers
 #           s_vec(:)                seasonal wavenumbers
-    
+
     # (Optimized version)
-    
+
     # A. Chulliat, 2016-09-22
 # (from an earlier version dated 2011-04-21, with inputs from N. Olsen)
-    
+
     rad=np.pi / 180
     w_s=2*np.pi
     w_p=2*np.pi / 24
@@ -46,19 +46,19 @@ def design_SHA_Sq_e_Re_v2(rho,theta,phi,t,t_ut,nmax,mmax,p_vec,s_vec):
     if dim2 > 1:
         theta=theta.transpose()
         phi=phi.transpose()
-    
+
     cos_theta=np.cos(theta*rad)
     sin_theta=np.sin(theta*rad)
     # convert to row vector if input parameter is scalar
     if np.isscalar(rho) is True:
         rho=rho*np.ones(N_data)
-    
+
     if np.isscalar(t) is True:
         t=t*np.ones(N_data)
-    
+
     if np.isscalar(t_ut) is True:
         t_ut=t_ut*np.ones(N_data)
-        
+
     # number of parameters
 
     N_nm=mmax*(mmax + 2) + (nmax - mmax)*(2*mmax + 1)
@@ -66,20 +66,20 @@ def design_SHA_Sq_e_Re_v2(rho,theta,phi,t,t_ut,nmax,mmax,p_vec,s_vec):
     N_coeff=2*N_nm*N_sp
     # calculate sub-matrices for s=0, p=0
     #This looks strange, but np.zeros takes a tuple as input, thus the extra paren is necessary
-    A_r_0=np.zeros((N_nm,N_data)) 
+    A_r_0=np.zeros((N_nm,N_data))
     A_theta_0=np.zeros((N_nm,N_data))
     A_phi_0=np.zeros((N_nm,N_data))
     k=0 #Cycles through all the coefficients for degree n, order m model.
     Pnm = np.zeros((mmax+2,nmax+1,np.size(cos_theta,0)))
     dPnm = np.zeros((mmax+2,nmax+1,np.size(cos_theta,0)))
-    
+
     [Pnm, dPnm] = legendre.legendre(90-theta, nmax)
 
     #Cycle through all of n and m
-    for n in xrange(1, nmax+1):
+    for n in range(1, nmax+1):
         rn1=rho**(n-1)
-        for m in xrange(min(n,mmax)+1): #The maximum m is less than the maximum n in the default DIFI
-            index = n * (n + 1) / 2 + m
+        for m in range(min(n,mmax)+1): #The maximum m is less than the maximum n in the default DIFI
+            index = int(n * (n + 1) / 2 + m)
             if m==0:
                 #no h terms for g10, g20, g30 etc...
                 A_r_0[k] = (-n)*rn1*Pnm[index]
@@ -128,7 +128,7 @@ def design_SHA_Sq_e_Re_v2(rho,theta,phi,t,t_ut,nmax,mmax,p_vec,s_vec):
                     A_r = A_r_0*cos_beta
                     A_theta = A_theta_0*cos_beta
                     A_phi = A_phi_0*cos_beta
-                    
+
 
                 A_r = np.vstack((A_r, A_r_0*sin_beta))
                 A_theta = np.vstack((A_theta, A_theta_0*sin_beta))

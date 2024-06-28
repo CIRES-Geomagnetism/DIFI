@@ -17,7 +17,7 @@ def jd2000_dt(year, month, day, UT = 0, minutes = 0):
         UT = np.ones(max_size,dtype=int) * UT
     if np.size(minutes) == 1:
         minutes = np.ones(max_size, dtype=int) * minutes
-    for i in xrange(np.size(year)):
+    for i in range(np.size(year)):
         td = datetime.datetime(int(year[i]), int(month[i]), int(day[i]), int(UT[i]), int(minutes[i])) - offset
         td_f = td.days+td.seconds/(3600.0*24)
         td_array = np.append(td_array, td_f)

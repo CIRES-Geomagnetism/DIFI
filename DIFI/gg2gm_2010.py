@@ -1,12 +1,12 @@
 import math
 import numpy as np
 
-    
+
 def gg2gm_2010(theta_gg = None, phi_gg = None, theta_gm = None, phi_gm = None, B_theta = None, B_phi = None, get_R = False):
 
     # transformation between geographic (geocentric as opposed to geodetic) and geomagnetic (dipole) co-ordinates
     #          and components
-    
+
     # theta_gm                = gg2gm(theta_gg, phi_gg)
     # [theta_gm, phi_gm]      = gg2gm(theta_gg, phi_gg)
     # [theta_out, phi_out]    = gg2gm(theta_in, phi_in, i_trans)
@@ -14,22 +14,22 @@ def gg2gm_2010(theta_gg = None, phi_gg = None, theta_gm = None, phi_gm = None, B
     #                         i_trans = -1: gm -> gg
     # [theta, phi, B_theta, B_phi]  = gg2gm(theta_gm, phi_gm, i_trans, B_theta, B_phi)
     # [theta, phi, R]               = gg2gm(theta_gm, phi_gm) ???????
-    
+
     # theta(:) co-latitude [deg]
     # phi(:)   longitude [deg]
-    
+
     # R(:,2,2) is the matrix that rotates a horizontal vector from GEO to MAG:
     #          [B_theta_gm; B_phi_gm] = R*[B_theta_geo; B_phi_geo]
-    
+
     # March 2003, Nils Olsen, DSRI
-    
+
     # September 2004: Output of matrix R added
-    
+
     # February 2011: coordinates of geomagnetic North pole updated to 2010.0
     # (Arnaud Chulliat, IPGP)
     # December 2016: translated to python
     # (Adam Woods, NCEI)
-    
+
     rad=math.pi / 180
 
 
@@ -42,12 +42,12 @@ def gg2gm_2010(theta_gg = None, phi_gg = None, theta_gm = None, phi_gm = None, B
         theta_in = theta_gm
         phi_in = phi_gm
     else:
-        print "Need either values for phi_gg and theta_gg xor phi_gm and theta_gm, not neither or both"
-    
+        print("Need either values for phi_gg and theta_gg xor phi_gm and theta_gm, not neither or both")
+
     # Initialization: coordinates of geomagnetic North pole as of 2010
     theta_b=9.92
     phi_b=287.78
-    
+
     s_p_b=np.sin(phi_b*rad)
     c_p_b=np.cos(phi_b*rad)
     c_t_b=np.cos(theta_b*rad)
@@ -56,8 +56,8 @@ def gg2gm_2010(theta_gg = None, phi_gg = None, theta_gm = None, phi_gm = None, B
 
     if i_trans == - 1:
         A=A.transpose()
-    
-    
+
+
     c_t=np.cos(theta_in*rad)
     s_t=np.sin(theta_in*rad)
     c_p=np.cos(phi_in*rad)
@@ -89,7 +89,7 @@ def gg2gm_2010(theta_gg = None, phi_gg = None, theta_gm = None, phi_gm = None, B
         varargout[1]=np.multiply(BE,c_t) - np.multiply(Bz_gm,s_t)
         varargout[2]=np.multiply(By_gm,c_p) - np.multiply(Bx_gm,s_p)
 #Still need to pythonify the above
-    
+
     if get_R:
         if i_trans != 1:
             error(r"Calculation of R only for i_trans = 1")
@@ -116,7 +116,7 @@ def gg2gm_2010(theta_gg = None, phi_gg = None, theta_gm = None, phi_gm = None, B
         s_t_b=s_t_b*np.ones(np.size(c_p,0))
         c_t_b=c_t_b*np.ones(np.size(c_p,0))
         #While they look like extra parentheticals these are necessary as zeros takes a tuple as a parameter
-        R_mag_geo=np.zeros((np.size(c_p,0),3,3)) 
+        R_mag_geo=np.zeros((np.size(c_p,0),3,3))
         R_mag_geo[:,0,:]=np.matrix([c_t_b*c_p_b, c_t_b*s_p_b, -s_t_b]).transpose()
         R_mag_geo[:,1,:]=np.matrix([-s_p_b, c_p_b, np.zeros(np.size(c_p,0))]).transpose()
         R_mag_geo[:,2,:]=np.matrix([s_t_b*c_p_b, s_t_b*s_p_b, c_t_b]).transpose()
@@ -128,6 +128,5 @@ def gg2gm_2010(theta_gg = None, phi_gg = None, theta_gm = None, phi_gm = None, B
         sm_R3 = np.hstack((column_2,column_3))
         #peeling off top sheet and column
         return [theta_out, phi_out, sm_R3]
-    else:    
+    else:
         return [theta_out, phi_out]
-    
