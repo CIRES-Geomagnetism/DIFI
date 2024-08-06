@@ -49,7 +49,7 @@ def getSQfield(lat, lon, year, month, day, hour=0, minutes=0, h=0):
     Input:
         Latitude, lat (in WGS-84 coordinates)
         Longtitude, lon
-        An array of year, year (Only good between 2014.0 and 2024.0
+        An array of year, year (Only good between 2014.0 and 2025.0
         An array of months, month
         An array of days, day
 
@@ -63,7 +63,7 @@ def getSQfield(lat, lon, year, month, day, hour=0, minutes=0, h=0):
     """
     a = 6371.2
     start_time = 5114.0
-    end_time = 8765.5
+    end_time = 9131.5
     sq_t = jd2000_dt.jd2000_dt(year, month, day, hour, minutes)
     frac_arr = sq_t - np.floor(sq_t)
     f107_1 = np.array([])
@@ -74,7 +74,7 @@ def getSQfield(lat, lon, year, month, day, hour=0, minutes=0, h=0):
             )
         elif sq_t[i] > end_time:
             raise Exception(
-                "Request after 2024.0 reached difi calculation improper"
+                "Request after 2025.0 reached difi calculation improperly"
             )
         while sq_t[i] < 5114.0:
             sq_t[i] += 365
