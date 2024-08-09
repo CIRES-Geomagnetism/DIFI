@@ -18,23 +18,23 @@ def SwarmL2_F107_Read(filename):
     t_f107=[]
 # SwarmL2_F107_Read.m:15
     f107=[]
-# SwarmL2_F107_Read.m:16
+
     fid=open(filename,'r')
-# SwarmL2_F107_Read.m:18
+
     #tline=fid.readline()
-# SwarmL2_F107_Read.m:20
+
     for tline in fid:
         # skip comment lines
         if tline[0] == '#':
             print("comment line")
             continue
-# SwarmL2_F107_Read.m:27
+
         # read data lines
         f = [float(i) for i in tline.split()]
-# SwarmL2_F107_Read.m:33
+
         t_f107.append(f[0])
-# SwarmL2_F107_Read.m:34
+
         f107.append(f[1])
-# SwarmL2_F107_Read.m:36
+
     fid.close()
     return t_f107, f107
