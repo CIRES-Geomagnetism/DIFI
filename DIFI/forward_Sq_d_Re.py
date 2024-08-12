@@ -116,21 +116,15 @@ def forward_Sq_d_Re(r, theta, phi, t, f107, s):
     # calculate dipolar coordinates + matrix R
     theta_d, phi_d, rotmat = gg2gm_2010.gg2gm_2010(theta, phi, get_R=True)
 
-    arr_internal = design_SHA_Sq_i_Re_v2.design_SHA_Sq_i_Re_v2(
-        rho,
-        theta_d,
-        phi_d,
-        s['nmax'],
-        s['mmax'],
-    )
     arr_internal = np.array(
-        [
-            -arr_internal[1],
-            arr_internal[2],
-            -arr_internal[0],
-        ]
+        design_SHA_Sq_i_Re_v2.design_SHA_Sq_i_Re_v2(
+            rho,
+            theta_d,
+            phi_d,
+            s['nmax'],
+            s['mmax'],
+        )
     )
-    arr_internal = arr_internal.transpose(1, 2, 0)
 
     s_vec = np.array(s['s_vec'])
     p_vec = np.array(s['p_vec'])
@@ -168,30 +162,25 @@ def forward_Sq_d_Re(r, theta, phi, t, f107, s):
         )
     # CASE #2: below Sq currents
     elif (max(rho) < rho_Sq):
-        arr_external = design_SHA_Sq_e_Re_v2.design_SHA_Sq_e_Re_v2(
-            rho,
-            theta_d,
-            phi_d,
-            s['nmax'],
-            s['mmax'],
-        )
         arr_external = np.array(
-            [
-                -arr_external[1],
-                arr_external[2],
-                -arr_external[0],
-            ]
+            design_SHA_Sq_e_Re_v2.design_SHA_Sq_e_Re_v2(
+                rho,
+                theta_d,
+                phi_d,
+                s['nmax'],
+                s['mmax'],
+            )
         )
-        arr_external = arr_external.transpose(1, 2, 0)
+
         B_1_tmp = np.einsum(
-            'ij, ikl, jk ->lk',
+            'ij, lik, jk ->lk',
             s['m_e_d_Re'],
             arr_external,
             time_arr,
         )
 
         B_2_tmp = np.einsum(
-            'ij, ikl, jk ->lk',
+            'ij, lik, jk ->lk',
             s['m_i_d_Re'],
             arr_internal,
             time_arr,
@@ -203,19 +192,16 @@ def forward_Sq_d_Re(r, theta, phi, t, f107, s):
 
     # Rotate into geomagnetic frame
     # fix minus sign
-    B_1_tmp[0] *= -1
-    B_1_tmp[2] *= -1
-    B_1_tmp[[0, 1]] = np.einsum(
+    B_1_tmp[[1, 2]] = np.einsum(
         'kij, jk -> ik',
         rotmat.transpose(0, 2, 1),
-        B_1_tmp[[0, 1]],
+        B_1_tmp[[1, 2]],
     )
-    B_2_tmp[0] *= -1
-    B_2_tmp[2] *= -1
-    B_2_tmp[[0, 1]] = np.einsum(
+
+    B_2_tmp[[1, 2]] = np.einsum(
         'kij, jk -> ik',
         rotmat.transpose(0, 2, 1),
-        B_2_tmp[[0, 1]],
+        B_2_tmp[[1, 2]],
     )
 
     # correct for F10.7 dependence
@@ -223,4 +209,4 @@ def forward_Sq_d_Re(r, theta, phi, t, f107, s):
     B_1 = B_1_tmp * w
     B_2 = B_2_tmp * w
 
-    return B_1[[2, 0, 1]], B_2[[2, 0, 1]]
+    return B_1, B_2
