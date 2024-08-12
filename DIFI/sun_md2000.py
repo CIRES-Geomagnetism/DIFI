@@ -1,10 +1,10 @@
 import math
 import numpy as np
 
-#Celestial Computing with MATLAB but with Python
-#input
+# Celestial Computing with MATLAB but with Python
+# input
 # mjd2000 = modified julian day 2000
-#output
+# output
 # rasc = right ascension of the sun (radians)
 #   (0 <= rasc <= 2 pi)
 # decl = declination of the sun (radians)
@@ -16,12 +16,13 @@ import numpy as np
 
 # Modified by Nils Oslen, DSRI
 # Translated to python by Adam Woods, NCEI
-    
+
+
 def sun_md2000(mjd2000):
     atr = math.pi/648000
-    #time arguments
+    # time arguments
     djd = mjd2000 - 0.5
-    t = djd/36525.0 + 1 
+    t = djd/36525.0 + 1
 
     # fundamental arguments (converted from revolutions to radians with r2r)
     gs = r2r(0.993126 + 0.0027377785 * djd)
@@ -34,16 +35,22 @@ def sun_md2000(mjd2000):
 
     # geocentric, ecliptic longitude of the sun (radians)
     plon = 6910 * np.sin(gs) + 72 * np.sin(2 * gs) - 17 * t * np.sin(gs)
-    plon = plon - 7 * np.cos(gs - g5) + 6 * np.sin(lm - ls) + 5 * np.sin(4 * gs - 8 * g4 + 3 * g5)
-    plon = plon - 5 * np.cos(2 * (gs - g2)) - 4 * (np.sin(gs - g2) - np.cos(4 * gs - 8 * g4 + 3 * g5))
-    plon = plon + 3 * (np.sin(2 * (gs - g2)) - np.sin(g5) - np.sin(2 * (gs - g5)))
+    plon = plon - 7 * np.cos(gs - g5) + 6 * np.sin(lm - ls) \
+        + 5 * np.sin(4 * gs - 8 * g4 + 3 * g5)
+    plon = plon - 5 * np.cos(2 * (gs - g2)) - 4 * (
+        np.sin(gs - g2)
+        - np.cos(4 * gs - 8 * g4 + 3 * g5)
+    )
+    plon = plon + 3 * (
+        np.sin(2 * (gs - g2)) - np.sin(g5) - np.sin(2 * (gs - g5))
+    )
     plon = ls + atr * (plon - 17 * np.sin(rm))
+    # plon%2pi*180/pi
 
-    #plon%2pi*180/pi
-
-    #geocentric distance of the sun (kilometers)
-
-    rsm = 149597870.691 * (1.00014 - 0.01675 * np.cos(gs) - 0.00014 * np.cos(2 * gs))
+    # geocentric distance of the sun (kilometers)
+    # rsm = 149597870.691 * (
+    #     1.00014 - 0.01675 * np.cos(gs) - 0.00014 * np.cos(2 * gs)
+    # )
 
     # obliquity of the ecliptic (radians)
     obliq = atr * (84428 - 47 * t + 9 * np.cos(rm))
@@ -56,13 +63,13 @@ def sun_md2000(mjd2000):
     decl = np.arcsin(np.sin(obliq)*np.sin(plon))
 
     return [rasc, decl]
-    
+
 
 def r2r(x):
-# revolutions to radians function
-# input
-#  x = argument(revolutions; 0 <= x <= 1)
-# returns
-#  equivalent x (radians; 0 <= y <= 2 pi)
+    # revolutions to radians function
+    # input
+    #  x = argument(revolutions; 0 <= x <= 1)
+    # returns
+    #  equivalent x (radians; 0 <= y <= 2 pi)
 
-    return 2*math.pi*(x%1)
+    return 2 * math.pi * (x % 1)
