@@ -85,6 +85,10 @@ def forward_Sq_d_Re(r, theta, phi, t, f107, s):
         )
         raise Exception(r"Variables must be of equal size (or scalars)")
 
+    w_s = 2*np.pi
+    w_p = 2*np.pi / 24
+    N_data = np.size(theta, 0)
+
     # calculate time in year (season) and MUT
     t_1 = [
         datetime.timedelta(int(t_iter), (t_iter - int(t_iter)) * 3600)
@@ -106,116 +110,103 @@ def forward_Sq_d_Re(r, theta, phi, t, f107, s):
         ]
     )
     # not inlcuded in HDGM version
-    t_season = np.squeeze(t_season)
+    t_season = t_season.flatten()
     t_mut = getmut.getmut(t, s['theta_NGP'], s['phi_NGP'])
+
     # calculate dipolar coordinates + matrix R
+    theta_d, phi_d, rotmat = gg2gm_2010.gg2gm_2010(theta, phi, get_R=True)
 
-    theta_d, phi_d, R = gg2gm_2010.gg2gm_2010(theta, phi, get_R=True)
-
-    # calculate number of coefficients and data
-    N_nm = (
-        s['mmax'] * (s['mmax'] + 2)
-        + (s['nmax'] - s['mmax']) * (2 * s['mmax'] + 1)
-    )
-    N_sp = np.size(s['p_vec']) * np.size(s['s_vec'])
-    N_coeff_nm = 2 * N_nm*N_sp
-    if (
-        np.size(s['m_e_d_Re'], 0) != N_nm
-        or np.size(s['m_e_d_Re'], 1) != 2*N_sp
-    ):
-        print(
-            np.size(s['m_e_d_Re'], 0),
-            N_nm,
-            np.size(s['m_e_d_Re'], 1),
-            2*N_sp,
+    arr_internal = np.array(
+        design_SHA_Sq_i_Re_v2.design_SHA_Sq_i_Re_v2(
+            rho,
+            theta_d,
+            phi_d,
+            s['nmax'],
+            s['mmax'],
         )
-        raise Exception(r"wrong number of model coefficients")
+    )
 
-    m_e_d_Re = np.reshape(s['m_e_d_Re'], N_coeff_nm, order='F')
-    m_i_d_Re = np.reshape(s['m_i_d_Re'], N_coeff_nm, order='F')
-    N_data = np.size(theta, 0)
+    s_vec = np.array(s['s_vec'])
+    p_vec = np.array(s['p_vec'])
+
+    beta = (
+        w_s * s_vec[:, None, None] * t_season[None, None, :]
+        + w_p * p_vec[None, :, None] * t_mut[None, None, :]
+    )
+    beta = beta.reshape(
+        -1, N_data
+    )
+    time_arr = np.array(
+        [
+            np.cos(beta),
+            np.sin(beta),
+        ]
+    )
+    time_arr = time_arr.transpose(1, 0, 2).reshape(-1, N_data)
 
     # CASE #1: above Sq currents
 
     if (min(rho) > rho_Sq):
-        # calculate design matrices
-        A_r_i_d, A_theta_i_dd, A_phi_i_dd = \
-            design_SHA_Sq_i_Re_v2.design_SHA_Sq_i_Re_v2(
-                rho,
-                theta_d,
-                phi_d,
-                t_season,
-                t_mut,
-                s['nmax'],
-                s['mmax'],
-                s['p_vec'],
-                s['s_vec'],
-            )
-        # A_theta_i_d = np.zeros((N_coeff_nm, N_data))
-        # A_phi_i_d = np.zeros((N_coeff_nm, N_data))
-        # calculate magnetic field
-        B_r_1_tmp = np.dot(m_e_d_Re, A_r_i_d)
-        B_theta_1_tmp = np.dot(m_e_d_Re, A_theta_i_dd)
-        B_phi_1_tmp = np.dot(m_e_d_Re, A_phi_i_dd)
-        B_r_2_tmp = np.dot(m_i_d_Re, A_r_i_d)
-        B_theta_2_tmp = np.dot(m_i_d_Re, A_theta_i_dd)
-        B_phi_2_tmp = np.dot(m_i_d_Re.T, A_phi_i_dd)
+        B_1_tmp = np.einsum(
+            'ij, ikl, jk ->lk',
+            s['m_e_d_Re'],
+            arr_internal,
+            time_arr,
+        )
+
+        B_2_tmp = np.einsum(
+            'ij, ikl, jk ->lk',
+            s['m_i_d_Re'],
+            arr_internal,
+            time_arr,
+        )
     # CASE #2: below Sq currents
     elif (max(rho) < rho_Sq):
-        # calculate design matrices
-        A_r_i_d, A_theta_i_dd, A_phi_i_dd = \
-            design_SHA_Sq_i_Re_v2.design_SHA_Sq_i_Re_v2(
-                rho,
-                theta_d,
-                phi_d,
-                t_season,
-                t_mut,
-                s['nmax'],
-                s['mmax'],
-                s['p_vec'],
-                s['s_vec'],
-            )
-        A_r_e_d, A_theta_e_dd, A_phi_e_dd = \
+        arr_external = np.array(
             design_SHA_Sq_e_Re_v2.design_SHA_Sq_e_Re_v2(
                 rho,
                 theta_d,
                 phi_d,
-                t_season,
-                t_mut,
                 s['nmax'],
                 s['mmax'],
-                s['p_vec'],
-                s['s_vec'],
             )
-        # A_theta_i_d = np.zeros((N_coeff_nm, N_data))
-        # A_phi_i_d = np.zeros((N_coeff_nm, N_data))
-        # A_theta_e_d = np.zeros((N_coeff_nm, N_data))
-        # A_phi_e_d = np.zeros((N_coeff_nm, N_data))
-        # calculate magnetic field
-        B_r_1_tmp = np.dot(m_e_d_Re, A_r_e_d)
-        B_theta_1_tmp = np.dot(m_e_d_Re, A_theta_e_dd)
-        B_phi_1_tmp = np.dot(m_e_d_Re, A_phi_e_dd)
-        B_r_2_tmp = np.dot(m_i_d_Re, A_r_i_d)
-        B_theta_2_tmp = np.dot(m_i_d_Re, A_theta_i_dd)
-        B_phi_2_tmp = np.dot(m_i_d_Re, A_phi_i_dd)
+        )
+
+        B_1_tmp = np.einsum(
+            'ij, lik, jk ->lk',
+            s['m_e_d_Re'],
+            arr_external,
+            time_arr,
+        )
+
+        B_2_tmp = np.einsum(
+            'ij, lik, jk ->lk',
+            s['m_i_d_Re'],
+            arr_internal,
+            time_arr,
+        )
+
     # CASE #3: error
     else:
         raise Exception(r"data in both regions (below and above Sq currents)")
 
     # Rotate into geomagnetic frame
-    B_theta_1_gg = np.zeros(N_data)
-    B_phi_1_gg = np.zeros(N_data)
-    B_theta_2_gg = np.zeros(N_data)
-    B_phi_2_gg = np.zeros(N_data)
-    for i in range(N_data):
-        # get inverse of R
-        tmp = R[i].transpose()
-        B_theta_1_gg = tmp[0, 0] * B_theta_1_tmp + tmp[0, 1] * B_phi_1_tmp
-        B_phi_1_gg = tmp[1, 0] * B_theta_1_tmp + tmp[1, 1] * B_phi_1_tmp
-        B_theta_2_gg = tmp[0, 0] * B_theta_2_tmp + tmp[0, 1] * B_phi_2_tmp
-        B_phi_2_gg = tmp[1, 0] * B_theta_2_tmp + tmp[1, 1] * B_phi_2_tmp
+    # fix minus sign
+    B_1_tmp[[1, 2]] = np.einsum(
+        'kij, jk -> ik',
+        rotmat.transpose(0, 2, 1),
+        B_1_tmp[[1, 2]],
+    )
+
+    B_2_tmp[[1, 2]] = np.einsum(
+        'kij, jk -> ik',
+        rotmat.transpose(0, 2, 1),
+        B_2_tmp[[1, 2]],
+    )
+
     # correct for F10.7 dependence
     w = (1 + s['N']*f107)
-    B_1 = np.vstack((B_r_1_tmp, B_theta_1_gg, B_phi_1_gg)) * w
-    B_2 = np.vstack((B_r_2_tmp, B_theta_2_gg, B_phi_2_gg)) * w
+    B_1 = B_1_tmp * w
+    B_2 = B_2_tmp * w
+
     return B_1, B_2
