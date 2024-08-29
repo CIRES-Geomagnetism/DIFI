@@ -1,8 +1,6 @@
 import math
-import sun_md2000
 import numpy as np
-
-
+from DIFI import sun_md2000
 def getmut(mjd2000, theta_NGP, phi_NGP, *args, **kwargs):
     # mut = getmut(mjd2000,theta_NGP,phi_NGP)
 

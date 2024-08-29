@@ -1,5 +1,14 @@
 .DS_Store
 .idea/
 
+*.log
+*.csv
+*.pyc
+*.out
+test_outputs.py
+
+env
+
 DIFI/*.pyc
- DIFI/__pycache__/
+DIFI/__pycache__/
+ __pycache__/
