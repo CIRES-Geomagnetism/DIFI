@@ -47,8 +47,8 @@ def main():
 def getSQfield(lat, lon, year, month, day, hour=0, minutes=0, h=0):
     """
     Input:
-        An array of latitude, lat (in WGS-84 coordinates)
-        An array of longtitude, lon
+        Latitude, lat (in WGS-84 coordinates)
+        Longtitude, lon
         An array of year, year (Only good between 2014.0 and 2025.0
         An array of months, month
         An array of days, day
