@@ -9,3 +9,4 @@ The latest version of DIFI is DIFI-7. Please see the [DIFI-7](https://geomag.col
 - Prequirements: numpy 
 - There is `examples.py` provides the example to use the module.
 
+
