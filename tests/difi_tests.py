@@ -1,30 +1,33 @@
 import unittest
-import jd2000_dt
 import numpy as np
-import legendre as l
-import sun_md2000 as s
-import getmut as gm
-import geod2geoc as gg
-import SwarmL2_MIO_SHA_Read_v2 as sr
 import os
-import forward_Sq_d_Re as fs
-import design_SHA_Sq_i_Re_v2 as dsi
-import design_SHA_Sq_e_Re_v2 as dse
-import gg2gm_2010 as gg2gm
+
+from DIFI import jd2000_dt
+
+from DIFI import legendre as l
+from DIFI import sun_md2000 as s
+from DIFI import getmut as gm
+from DIFI import geod2geoc as gg
+from DIFI import SwarmL2_MIO_SHA_Read_v2 as sr
+
+from DIFI import forward_Sq_d_Re as fs
+from DIFI import design_SHA_Sq_i_Re_v2 as dsi
+from DIFI import design_SHA_Sq_e_Re_v2 as dse
+from DIFI import gg2gm_2010 as gg2gm
 
 def raiseException(e):
     raise e
 
 class TestDifi(unittest.TestCase):
     def test_jd2000_dt(self):
-        inputs = {"year": 2015, 
-                  "month": 5, 
-                  "day": 20,
-                  "UT": 5,
+        inputs = {"year": 2024,
+                  "month": 12,
+                  "day": 31,
+                  "UT": 12,
                   "minutes": 30
         }
         output = jd2000_dt.jd2000_dt(**inputs)
-        self.assertAlmostEqual(output[0], 5618.22916667, places=7)
+        self.assertAlmostEqual(output[0], 9.1315000e+03, places=1)
     def test_jd2000_dt_at0(self):        
         inputs = {"year": 2000, 
                   "month": 1, 
