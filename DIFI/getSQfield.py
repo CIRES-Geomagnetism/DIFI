@@ -1,11 +1,13 @@
 import numpy as np
+import os
 
-from DIFI import difi_t_f107, difi_f107
-from DIFI import SwarmL2_F107_Read
 from DIFI import jd2000_dt
-from DIFI import difi_f107, difi_t_f107, swarm_data
+from functools import lru_cache
 from DIFI import geod2geoc
 from DIFI import forward_Sq_d_Re
+from DIFI import get_f107_index
+
+
 
 def getSQfield(lat, lon, year, month, day, hour=0, minutes=0, h=0):
     """
@@ -26,28 +28,11 @@ def getSQfield(lat, lon, year, month, day, hour=0, minutes=0, h=0):
     """
     a = 6371.2
     start_time = 5114.0
-    end_time = float(difi_t_f107[-1])
+
+    end_time = float(get_f107_index.difi_t_f107[-1])
     sq_t = jd2000_dt.jd2000_dt(year, month, day, hour, minutes)
-    frac_arr = sq_t - np.floor(sq_t)
-    f107_1 = np.array([])
-    for i in range(np.size(sq_t)):
-        if sq_t[i] < start_time:
-            raise Exception(
-                "Request before 2014.0 reached difi calculation improper"
-            )
-        elif sq_t[i] > end_time:
-            raise Exception(
-                "Request after 2024.0 reached difi calculation improperly"
-            )
-        while sq_t[i] < 5114.0:
-            sq_t[i] += 365
-        j = 0
-        while difi_t_f107[j] < sq_t[i]:
-            j += 1
-        f107_1 = np.append(
-            f107_1,
-            difi_f107[j] * frac_arr[i] + difi_f107[j - 1] * (1 - frac_arr[i])
-        )
+
+    f107_1 = get_f107_index.get_f107_index(sq_t, start_time, end_time)
 
     B_XYZ = {}
     if h < 20:  # LIMIT ALTITUDE REQUESTS TO 20 KM.  Model invalid above!
@@ -61,7 +46,7 @@ def getSQfield(lat, lon, year, month, day, hour=0, minutes=0, h=0):
             lon,
             sq_t,
             f107_1,
-            swarm_data,
+            get_f107_index.swarm_data,
         )
         # print "Difi output", B_1, B_2
         B_C = B_1 + B_2
@@ -78,4 +63,4 @@ def getSQfield(lat, lon, year, month, day, hour=0, minutes=0, h=0):
         B_XYZ['X'] = 0
     B = RotateMagneticVector(B_XYZ, 90 - theta_gc, lat)
     # B = B_XYZ
-    return B, f107_1
+    return B

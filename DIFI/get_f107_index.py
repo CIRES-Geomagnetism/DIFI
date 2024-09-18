@@ -1,10 +1,31 @@
+import os
 import numpy as np
-from DIFI import difi_t_f107, difi_f107
+from functools import lru_cache
+from DIFI import getSQfield, SwarmL2_F107_Read, SwarmL2_MIO_SHA_Read_v2
+
+@lru_cache(maxsize=1)
+def load_coefs():
+    baseDir = os.path.dirname(__file__)
+    filename_f107 = os.path.join(baseDir, "coefs", "f107.DBL")
+    difi_t_f107, difi_f107 = SwarmL2_F107_Read.SwarmL2_F107_Read(filename_f107)
+
+    return difi_t_f107, difi_f107
+@lru_cache(maxsize=1)
+def load_swarm():
+    baseDir = os.path.dirname(__file__)
+    filename_DIFI = os.path.join(baseDir, "coefs", "difi-coefs.txt")
+    swarm_data = SwarmL2_MIO_SHA_Read_v2.SwarmL2_MIO_SHA_Read_v2(filename_DIFI)
+
+    return swarm_data
+
+difi_t_f107, difi_f107 = load_coefs()
+swarm_data = load_swarm()
 
 def get_f107_index(sq_t: list, start_time: float, end_time: float) -> list:
 
     frac_arr = sq_t - np.floor(sq_t)
     f107_1 = np.array([])
+
     for i in range(np.size(sq_t)):
         if sq_t[i] < start_time:
             raise Exception(
