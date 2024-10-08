@@ -20,5 +20,5 @@ Now run this command from the same directory where pyproject.toml is located:
 
 ## Installing your newly uploaded package at TestPyPI
 
-`python3 -m pip install --index-url https://test.pypi.org/simple/ --no-deps DIFI`
+`python3 -m pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple/ DIFI`
 
