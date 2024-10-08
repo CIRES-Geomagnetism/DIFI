@@ -1,6 +1,6 @@
 [project]
 name = "DIFI"
-version = "v1.1.1"
+version = "v1.1.2"
 authors = [
   { name="Li-Yin Young", email="liyin.young@noaa.gov" },
 ]
