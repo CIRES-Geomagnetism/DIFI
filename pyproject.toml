@@ -1,8 +1,8 @@
 [project]
 name = "DIFI"
-version = "v1.0.0"
+version = "v1.1.0"
 authors = [
-  { name="Li-Yin Young", email="author@example.com" },
+  { name="Li-Yin Young", email="liyin.young@noaa.gov" },
 ]
 description = "The python module for DIFI-7"
 readme = "README.md"
@@ -13,7 +13,8 @@ classifiers = [
     "Operating System :: OS Independent",
 ]
 dependencies = ["numpy",
-    "geomaglib @ git+https://github.com/CIRES-Geomagnetism/geomaglib.git@main"  # Git dependency
+    "geomaglib==0.4.4"
+    #"geomaglib @ git+https://github.com/CIRES-Geomagnetism/geomaglib.git@main"  # Git dependency
 ]
 
 [build-system]
@@ -21,4 +22,4 @@ requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project.urls]
-Homepage = "https://geomag.colorado.edu/difi-7"
+Homepage = "https://github.com/CIRES-Geomagnetism/DIFI"

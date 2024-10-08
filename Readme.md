@@ -7,6 +7,12 @@ The latest version of DIFI is DIFI-7. Please see the [DIFI-7](https://geomag.col
 
 - DIFI 7 is developed and tested in Python 3.11.2 environment
 
+## Install
+
+```
+pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple/ DIFI==1.1.0
+```
+TestPyPI only have numpy==1.9, so we need the flag `--extra-index-url` to search the latest versions of numpy frm PyPI
 ## Quick Start
 
 ### Get magnetic vectors from single point
