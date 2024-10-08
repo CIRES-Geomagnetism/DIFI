@@ -13,7 +13,7 @@ classifiers = [
     "Operating System :: OS Independent",
 ]
 dependencies = ["numpy",
-    "geomaglib @ git+https://github.com/CIRES-Geomagnetism/geomaglib.git@v0.2.3"  # Git dependency
+    "geomaglib @ git+https://github.com/CIRES-Geomagnetism/geomaglib.git@main"  # Git dependency
 ]
 
 [build-system]

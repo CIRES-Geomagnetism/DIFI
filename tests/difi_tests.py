@@ -27,6 +27,8 @@ class TestDifi(unittest.TestCase):
                   "minutes": 30
         }
         output = jd2000_dt.jd2000_dt(**inputs)
+
+        print(output)
         self.assertAlmostEqual(output[0], 9.1315000e+03, places=1)
     def test_jd2000_dt_at0(self):        
         inputs = {"year": 2000, 

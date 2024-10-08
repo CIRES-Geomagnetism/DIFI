@@ -6,10 +6,10 @@ from functools import lru_cache
 from DIFI import geod2geoc
 from DIFI import forward_Sq_d_Re
 from DIFI import get_f107_index
+from geomaglib import util, magmath
+from typing import Optional
 
-
-
-def getSQfield(lat, lon, year, month, day, hour=0, minutes=0, h=0):
+def getSQfield(lat, lon, year, month, day, hour=0, minutes=0, h=0, f107_1: Optional[list]=None):
     """
     Input:
         Latitude, lat (in WGS-84 coordinates)
@@ -32,17 +32,18 @@ def getSQfield(lat, lon, year, month, day, hour=0, minutes=0, h=0):
     end_time = float(get_f107_index.difi_t_f107[-1])
     sq_t = jd2000_dt.jd2000_dt(year, month, day, hour, minutes)
 
-    f107_1 = get_f107_index.get_f107_index(sq_t, start_time, end_time)
+    if f107_1 is None:
+        f107_1 = get_f107_index.get_f107_index(sq_t, start_time, end_time)
 
     B_XYZ = {}
     if h < 20:  # LIMIT ALTITUDE REQUESTS TO 20 KM.  Model invalid above!
-        [r_gc, theta_gc] = geod2geoc.geod2geoc(np.radians(lat), h)
+        r_gc, theta_gc = util.geod_to_geoc_lat(lat, h)
         r_gc = a + h
-        theta_gc = np.degrees(theta_gc)
+        cotheta_gc = 90 - theta_gc
         # print "Difi input", r_gc, theta_gc, RV['lon'], sq_t, f107_1
         [B_1, B_2] = forward_Sq_d_Re.forward_Sq_d_Re(
             r_gc,
-            theta_gc,
+            cotheta_gc,
             lon,
             sq_t,
             f107_1,
@@ -61,6 +62,10 @@ def getSQfield(lat, lon, year, month, day, hour=0, minutes=0, h=0):
         B_XYZ['Z'] = 0
         B_XYZ['Y'] = 0
         B_XYZ['X'] = 0
-    B = RotateMagneticVector(B_XYZ, 90 - theta_gc, lat)
-    # B = B_XYZ
-    return B
+
+    Bx, By, Bz = magmath.rotate_magvec(B_XYZ['X'], B_XYZ['Y'], B_XYZ['Z'], theta_gc, lat)
+
+    B_XYZ["X"] = Bx
+    B_XYZ["Y"] = By
+    B_XYZ["Z"] = Bz
+    return B_XYZ

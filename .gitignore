@@ -12,3 +12,5 @@ env
 DIFI/*.pyc
 DIFI/__pycache__/
  __pycache__/
+DIFI.egg-info/
+dist/
