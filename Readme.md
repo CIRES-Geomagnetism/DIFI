@@ -6,7 +6,31 @@ The latest version of DIFI is DIFI-7. Please see the [DIFI-7](https://geomag.col
 ## Run the DIFI Module with Python
 
 - DIFI 7 is developed and tested in Python 3.11.2 environment
-- Prequirements: numpy 
-- There is `examples.py` provides the example to use the module.
+
+## Quick Start
+
+### Get magnetic vectors from single point
+
+```python
+from DIFI import getSQfield
+lat, lon, year, month, day, hour = 20.5, 100.5, 2024, 6, 6, 0
+B = getSQfield(lat, lon, year, month, day, hour=hour)
+```
+
+It will return the results in dict type
+```python
+{'Z': array([-17.96973597]), 'Y': array([-17.27277951]), 'X': array([16.2994898])}
+```
+### Get time series of magnetic vectors 
+
+```python
+from DIFI import getSQfield
+lat, lon = 20.5, 100.5
+year = 2023
+month = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+day = 15
+B = getSQfield(lat, lon, year, month, day)
+```
+
 
 

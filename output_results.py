@@ -41,7 +41,7 @@ def out_difi_new(outfile, lats, lons, hours, year, month, day):
 		for lat in lats:
 			for lon in lons:
 				for hour in hours:
-					B = new_sqfield.getSQfield(lat, lon, year, month, day, hour=hour)
+					B = new_sqfield(lat, lon, year, month, day, hour=hour)
 
 					file.write(str(B['X'][0]) + "," + str(B['Y'][0]) + "," + str(B['Z'][0]) + "\n")
 					if count % 100 == 0:

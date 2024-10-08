@@ -18,6 +18,17 @@ class Test_sqfield(unittest.TestCase):
         self.difi_t_f107, self.difi_f107 = get_f107_index.load_coefs()
         self.swarm_data = get_f107_index.load_swarm()
 
+    def test_jd2000_dt(self):
+        inputs = {"year": 2025,
+                  "month": 12,
+                  "day": 31,
+                  "UT": 12,
+                  "minutes": 30
+                  }
+        output = jd2000_dt.jd2000_dt(**inputs)
+
+        print(output)
+        self.assertAlmostEqual(output[0], 9.4965000e+03 , places=1)
     def test_get_end_time(self):
         # get end time from f107.DBL (the end of first column)
         difi_t_f107, difi_f107 = SwarmL2_F107_Read.SwarmL2_F107_Read(self.f107_file)
@@ -193,14 +204,14 @@ class Test_sqfield(unittest.TestCase):
     def test_getSQfield(self):
 
         year = 2023
-        month = np.array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12])
+        month = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
         day = 15
 
-        B = getSQfield.getSQfield(21.3166, -157.9996, 2023, 11, 1)
+        B = getSQfield(21.3166, -157.9996, 2023, 11, 1)
 
         print(B)
 
-        B = getSQfield.getSQfield(20, -50, year, month, day)
+        B = getSQfield(20, -50, year, month, day)
 
         print(B)
 

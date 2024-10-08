@@ -33,7 +33,7 @@ def get_f107_index(sq_t: list, start_time: float, end_time: float) -> list:
             )
         elif sq_t[i] > end_time:
             raise Exception(
-                "Request after 2025.0 reached difi calculation improperly"
+                "Request after 2026.0 reached difi calculation improperly"
             )
         while sq_t[i] < 5114.0:
             sq_t[i] += 365
