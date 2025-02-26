@@ -1,6 +1,6 @@
 [project]
 name = "DIFI"
-version = "v1.1.2"
+version = "7.1.3"
 authors = [
   { name="Li-Yin Young", email="liyin.young@noaa.gov" },
 ]
@@ -13,8 +13,7 @@ classifiers = [
     "Operating System :: OS Independent",
 ]
 dependencies = ["numpy",
-    "geomaglib==0.4.4"
-    #"geomaglib @ git+https://github.com/CIRES-Geomagnetism/geomaglib.git@main"  # Git dependency
+    "geomaglib>=1.1.3"
 ]
 
 [build-system]

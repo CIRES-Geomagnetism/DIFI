@@ -40,6 +40,8 @@ def getSQfield(lat, lon, year, month, day, hour=0, minutes=0, h=0, f107_1: Optio
         r_gc, theta_gc = util.geod_to_geoc_lat(lat, h)
         r_gc = a + h
         cotheta_gc = 90 - theta_gc
+
+
         # print "Difi input", r_gc, theta_gc, RV['lon'], sq_t, f107_1
         [B_1, B_2] = forward_Sq_d_Re.forward_Sq_d_Re(
             r_gc,

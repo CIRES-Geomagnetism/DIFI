@@ -37,7 +37,7 @@ class Test_sqfield(unittest.TestCase):
 
     def test_geod2geoc(self):
 
-        # test Nils' vs Aranud's
+        # test Nir's vs Aranud's
         phi = 85 * np.pi / 180
         h = 0
 
@@ -45,9 +45,12 @@ class Test_sqfield(unittest.TestCase):
         n_theta = 90-n_sph_phi*180.0/np.pi
 
         a_r, a_theta = util.geod_to_geoc_lat(85, h)
+        a_to_n_theta = (90 - a_theta)*np.pi/180.0
 
         self.assertAlmostEqual(n_r, a_r, places=8)
         self.assertAlmostEqual(n_theta, a_theta, places=8)
+        self.assertAlmostEqual(n_theta, a_theta, places=8)
+        self.assertAlmostEqual(n_sph_phi, a_to_n_theta, places=8)
 
     def test_gg2gm(self):
 

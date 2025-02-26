@@ -25,7 +25,9 @@ def out_difi_old(outfile, lats, lons, hours, year, month, day):
 		for lat in lats:
 			for lon in lons:
 				for hour in hours:
-					B = getSQfield(lat, lon, year, month, day, hour=hour)
+					B, f107 = getSQfield(lat, lon, year, month, day, hour=hour)
+
+
 
 					file.write(str(B['X'][0]) + "," + str(B['Y'][0]) + "," + str(B['Z'][0]) + "\n")
 					if count % 100 == 0:
@@ -58,9 +60,9 @@ def main():
 	day = 10
 	hours = [3, 5, 7]
 
-	outfile = "20241003_outputs_difi_new.csv"
+	outfile = "20250220_outputs_difi_old.csv"
 
-	out_difi_new(outfile, lats, lons, hours, year, month, day)
+	out_difi_old(outfile, lats, lons, hours, year, month, day)
 
 
 
