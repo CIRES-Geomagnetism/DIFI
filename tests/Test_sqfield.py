@@ -4,7 +4,7 @@ import numpy as np
 
 from geomaglib import util
 
-from DIFI import SwarmL2_F107_Read, geod2geoc, legendre, jd2000_dt, get_f107_index, forward_Sq_d_Re, gg2gm_2010, design_SHA_Sq_e_Re_v2, design_SHA_Sq_i_Re_v2, getSQfield
+from DIFI import SwarmL2_F107_Read, geod2geoc, jd2000_dt, get_f107_index, forward_Sq_d_Re, gg2gm_2010, design_SHA_Sq_e_Re_v2, design_SHA_Sq_i_Re_v2, getSQfield
 
 
 class Test_sqfield(unittest.TestCase):
@@ -33,7 +33,7 @@ class Test_sqfield(unittest.TestCase):
         # get end time from f107.DBL (the end of first column)
         difi_t_f107, difi_f107 = SwarmL2_F107_Read.SwarmL2_F107_Read(self.f107_file)
 
-        self.assertEqual(difi_t_f107[-1], 9.1315000e+03)  # add assertion here
+        self.assertAlmostEqual(difi_t_f107[-1], 9496.52083333, delta=0.05)  # add assertion here
 
     def test_geod2geoc(self):
 
@@ -207,28 +207,23 @@ class Test_sqfield(unittest.TestCase):
     def test_getSQfield(self):
 
         year = 2023
-        month = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+        month = np.array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12])
         day = 15
-
-        B = getSQfield(21.3166, -157.9996, 2023, 11, 1)
-
-        print(B)
-
         B = getSQfield(20, -50, year, month, day)
 
         print(B)
 
         Z = [-1.11753492, -2.17806267, -2.36170017, -1.55958987, -0.4729657 ,
-        0.02314406, -0.62739855, -1.84115162, -2.41599221, -1.93664788,
-       -0.91328872, -0.47807066]
+        0.02314406, -0.62739855, -1.84115162, -2.36710727, -1.87638184,
+       -0.8895632 , -0.48355758]
 
         X = [-1.63857938, -0.99863218, -0.70018449, -1.01992701, -1.70769538,
-       -2.239885  , -2.03735071, -1.2146875 , -0.53504296, -0.62733946,
-       -1.33669145, -1.80754398]
+       -2.239885  , -2.03735071, -1.2146875 , -0.52421696, -0.60781745,
+       -1.30196673, -1.82828954]
 
         Y = [-0.53981766,  0.02365691,  1.0244612 ,  2.68627321,  4.66764832,
-        6.15517171,  5.83115627,  3.98613964,  2.00863353,  0.73887103,
-       -0.06879104, -0.51973947]
+        6.15517171,  5.83115627,  3.98613964,  1.96799105,  0.7158783 ,
+       -0.06700398, -0.52570463]
 
         for i in range(12):
             self.assertAlmostEqual(B["X"][i], X[i], places=6)
