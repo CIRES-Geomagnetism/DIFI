@@ -33,7 +33,6 @@ class TestDifi(unittest.TestCase):
         }
         output = jd2000_dt.jd2000_dt(**inputs)
 
-        print(output)
         self.assertAlmostEqual(output[0], 9.1315000e+03, places=1)
     def test_jd2000_dt_at0(self):        
         inputs = {"year": 2000, 
@@ -95,6 +94,7 @@ class TestDifi(unittest.TestCase):
         self.assertAlmostEqual(0.252378643254093, decl, places=15)
         day = np.array([300.25522, 3671.167])
         rasc, decl = s.sun_md2000(day)
+
         self.assertAlmostEqual(-2.585172002406036, rasc[0], places=15)
         self.assertAlmostEqual(-1.027903722933005, rasc[1], places=15)
         self.assertAlmostEqual(-0.225089538635647, decl[0], places=15)
@@ -105,6 +105,7 @@ class TestDifi(unittest.TestCase):
         theta = 120
         phi = 70
         t_mut = gm.getmut(np.array([t]), theta, phi)
+
         self.assertAlmostEqual(t_mut[0], 4.627250370601096, places=15)
         t_mut = gm.getmut(np.array([t]), theta, -phi)
         self.assertAlmostEqual(t_mut[0], 16.741613977999435, places=15)
@@ -122,9 +123,6 @@ class TestDifi(unittest.TestCase):
     def test_MIO_SHA_Read(self):
 
         s = sr.SwarmL2_MIO_SHA_Read_v2(self.difi_coef)
-
-
-
 
         self.assertEqual(s["nmax"], 60)
         self.assertEqual(s["mmax"], 12)
@@ -149,6 +147,8 @@ class TestDifi(unittest.TestCase):
         s = sr.SwarmL2_MIO_SHA_Read_v2(self.difi_coef)
         s['h'] = 3
         [B1, B2] = fs.forward_Sq_d_Re(a, theta, lon, t, f107, s)
+
+
         self.assertAlmostEqual(B1[0][0], 7.627417313149250, places=12)
         self.assertAlmostEqual(B1[1][0], 5.066420402691515, places=12)
         self.assertAlmostEqual(B1[2][0], -28.54155907663003, places=12)
@@ -166,7 +166,7 @@ class TestDifi(unittest.TestCase):
         s_vec = [-2, -1, 0, 1, 2]
         nmax = 60
         mmax = 12
-        A_r, A_theta, A_phi = dsi.design_SHA_Sq_i_Re_v2(rho, theta, phi, t, t_ut, nmax, mmax, p_vec, s_vec)
+        A_r, A_theta, A_phi = dsi.design_SHA_Sq_i_Re_v2(rho, theta, phi, nmax, mmax)
         self.assertEqual(np.size(A_r), 68400)
         self.assertEqual(np.size(A_theta), 68400)
         self.assertEqual(np.size(A_phi), 68400)
@@ -203,6 +203,7 @@ class TestDifi(unittest.TestCase):
 
     def test_gg2gm(self):
         theta_gm, phi_gm, R = gg2gm.gg2gm_2010(theta_gg = np.array([20.0]), phi_gg = np.array([40.0]), get_R = True)
+
         self.assertAlmostEqual(theta_gm,25.396461447872113)
         self.assertAlmostEqual(phi_gm,132.4172298377015)
         self.assertAlmostEqual(R[0][0][0], 0.9283, places=4)

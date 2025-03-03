@@ -1,7 +1,10 @@
 import math
+from typing import Union
+
 import numpy as np
+
 from DIFI import sun_md2000
-def getmut(mjd2000, theta_NGP, phi_NGP, *args, **kwargs):
+def getmut(mjd2000: list, theta_NGP: Union[float, list], phi_NGP: float, *args, **kwargs) -> np.ndarray:
     # mut = getmut(mjd2000,theta_NGP,phi_NGP)
 
     # Calculate the Magnetic Universal Time for a given MJD2000 and a given

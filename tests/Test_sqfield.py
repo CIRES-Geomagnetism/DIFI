@@ -52,6 +52,7 @@ class Test_sqfield(unittest.TestCase):
         # get end time from f107.DBL (the end of first column)
         difi_t_f107, difi_f107 = SwarmL2_F107_Read.SwarmL2_F107_Read(self.f107_file)
 
+
         self.assertAlmostEqual(difi_t_f107[-1], 9496.52083333, delta=0.05)  # add assertion here
 
     def test_geod2geoc(self):
@@ -119,6 +120,8 @@ class Test_sqfield(unittest.TestCase):
         print(np.shape(a_r))
 
 
+
+
         for i in range(N):
             self.assertAlmostEqual(float(a_r[i][0]), float(A_r[i]), places=6)
             self.assertAlmostEqual(float(a_theta[i][0]), float(A_theta[i]), places=6)
@@ -152,6 +155,10 @@ class Test_sqfield(unittest.TestCase):
         N = len(a_r)
         print(np.shape(a_r))
 
+        print(type(a_r))
+        print(type(a_theta))
+        print(type(a_phi))
+
         for i in range(N):
             self.assertAlmostEqual(float(a_r[i][0]), float(A_r[i]), places=6)
             self.assertAlmostEqual(float(a_theta[i][0]), float(A_theta[i]), places=6)
@@ -161,9 +168,11 @@ class Test_sqfield(unittest.TestCase):
         # replacing geod2geoc at forward_Sq_d_re with geomaglib.util.geod_to_geoc_lat()
         a = 6371.2
         start_time = 5114.0
+
         end_time = float(self.difi_t_f107[-1])
         year, month, day, hour, minutes = 2024, 9, 5, 0, 0
         sq_t = jd2000_dt.jd2000_dt(year, month, day, hour, minutes)
+
         f107_1 = get_f107_index.get_f107_index(sq_t, start_time, end_time)
 
 
@@ -241,6 +250,34 @@ class Test_sqfield(unittest.TestCase):
             self.assertAlmostEqual(B["Y"][i], Y[i], places=6)
             self.assertAlmostEqual(B["Z"][i], Z[i], places=6)
 
+
+    def test_readme_arr(self):
+
+        year = 2023
+        month = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+        day = 15
+
+        lat = []
+        lon = []
+
+        for num in range(80,90):
+            lat.append(num)
+            lon.append(155+ 0.1*num)
+
+        print(lat)
+        print(lon)
+        B = getSQfield(20, -50, year, month, day)
+
+        print(B)
+
+    def test_readme_point(self):
+
+        lat, lon, year, month, day, hour = 20.5, 100.5, 2024, 6, 6, 0
+        B = getSQfield(lat, lon, year, month, day, hour=hour)
+
+
+
+        print(B)
 
 
 

@@ -1,5 +1,6 @@
 import math
 import numpy as np
+from typing import Union
 
 # Celestial Computing with MATLAB but with Python
 # input
@@ -18,7 +19,7 @@ import numpy as np
 # Translated to python by Adam Woods, NCEI
 
 
-def sun_md2000(mjd2000):
+def sun_md2000(mjd2000: Union[float, list]) -> list[np.ndarray, np.ndarray]:
     atr = math.pi/648000
     # time arguments
     djd = mjd2000 - 0.5
@@ -65,7 +66,7 @@ def sun_md2000(mjd2000):
     return [rasc, decl]
 
 
-def r2r(x):
+def r2r(x: float) -> float:
     # revolutions to radians function
     # input
     #  x = argument(revolutions; 0 <= x <= 1)

@@ -7,9 +7,9 @@ from DIFI import geod2geoc
 from DIFI import forward_Sq_d_Re
 from DIFI import get_f107_index
 from geomaglib import util, magmath
-from typing import Optional
+from typing import Optional, Union
 
-def getSQfield(lat, lon, year, month, day, hour=0, minutes=0, h=0, f107_1: Optional[list]=None):
+def getSQfield(lat: Union[float, list], lon: Union[float, list], year: Union[int, list], month: Union[int, list], day: Union[int, list], hour: Union[int, list]=0, minutes: Union[int, list]=0, h: Union[int, list]=0, f107_1: Optional[list]=None) -> dict:
     """
     Input:
         Latitude, lat (in WGS-84 coordinates)
@@ -61,9 +61,7 @@ def getSQfield(lat, lon, year, month, day, hour=0, minutes=0, h=0, f107_1: Optio
         raise ValueError(
             "Requested altitude {h} km is higher than 20 km".format(h=repr(h))
         )
-        B_XYZ['Z'] = 0
-        B_XYZ['Y'] = 0
-        B_XYZ['X'] = 0
+
 
     Bx, By, Bz = magmath.rotate_magvec(B_XYZ['X'], B_XYZ['Y'], B_XYZ['Z'], theta_gc, lat)
 

@@ -4,14 +4,14 @@ from functools import lru_cache
 from DIFI import getSQfield, SwarmL2_F107_Read, SwarmL2_MIO_SHA_Read_v2
 
 @lru_cache(maxsize=1)
-def load_coefs():
+def load_coefs() -> tuple[list, list]:
     baseDir = os.path.dirname(__file__)
     filename_f107 = os.path.join(baseDir, "coefs", "f107.DBL")
     difi_t_f107, difi_f107 = SwarmL2_F107_Read.SwarmL2_F107_Read(filename_f107)
 
     return difi_t_f107, difi_f107
 @lru_cache(maxsize=1)
-def load_swarm():
+def load_swarm() -> dict:
     baseDir = os.path.dirname(__file__)
     filename_DIFI = os.path.join(baseDir, "coefs", "difi-coefs.txt")
     swarm_data = SwarmL2_MIO_SHA_Read_v2.SwarmL2_MIO_SHA_Read_v2(filename_DIFI)
@@ -21,7 +21,7 @@ def load_swarm():
 difi_t_f107, difi_f107 = load_coefs()
 swarm_data = load_swarm()
 
-def get_f107_index(sq_t: list, start_time: float, end_time: float) -> list:
+def get_f107_index(sq_t: list, start_time: float, end_time: float) ->np.ndarray:
 
     frac_arr = sq_t - np.floor(sq_t)
     f107_1 = np.array([])

@@ -2,14 +2,15 @@ import math
 import numpy as np
 
 
+
 def gg2gm_2010(
-    theta_gg=None,
-    phi_gg=None,
+    theta_gg: np.ndarray=None,
+    phi_gg: np.ndarray=None,
     theta_gm=None,
     phi_gm=None,
     B_theta=None,
     B_phi=None,
-    get_R=False
+    get_R: bool=False
 ):
     # transformation between geographic (geocentric as opposed to geodetic)
     # and geomagnetic (dipole) co-ordinates
