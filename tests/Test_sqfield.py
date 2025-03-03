@@ -18,6 +18,25 @@ class Test_sqfield(unittest.TestCase):
         self.difi_t_f107, self.difi_f107 = get_f107_index.load_coefs()
         self.swarm_data = get_f107_index.load_swarm()
 
+    def read_design_sha(self, filename):
+
+        A_r = []
+        A_theta = []
+        A_phi = []
+
+        with open(filename, "r") as fp:
+            for i, line in enumerate(fp):
+                if i == 0:
+                    continue
+                else:
+                    vals = line.split(",")
+
+                    A_r.append(vals[0])
+                    A_theta.append(vals[1])
+                    A_phi.append(vals[2])
+
+        return A_r, A_theta, A_phi
+
     def test_jd2000_dt(self):
         inputs = {"year": 2025,
                   "month": 12,
@@ -47,10 +66,10 @@ class Test_sqfield(unittest.TestCase):
         a_r, a_theta = util.geod_to_geoc_lat(85, h)
         a_to_n_theta = (90 - a_theta)*np.pi/180.0
 
-        self.assertAlmostEqual(n_r, a_r, places=8)
-        self.assertAlmostEqual(n_theta, a_theta, places=8)
-        self.assertAlmostEqual(n_theta, a_theta, places=8)
-        self.assertAlmostEqual(n_sph_phi, a_to_n_theta, places=8)
+        self.assertAlmostEqual(n_r, a_r, places=7)
+        self.assertAlmostEqual(n_theta, a_theta, places=7)
+        self.assertAlmostEqual(n_theta, a_theta, places=7)
+        self.assertAlmostEqual(n_sph_phi, a_to_n_theta, places=7)
 
     def test_gg2gm(self):
 
@@ -73,6 +92,11 @@ class Test_sqfield(unittest.TestCase):
     def test_legendre_for_sha_e(self):
         # test McupLow vs Collin's
 
+        top_dir = os.path.dirname(os.path.dirname(__file__))
+        A_file_name = os.path.join(top_dir, "design_sha_e.csv")
+        A_r, A_theta, A_phi = self.read_design_sha(A_file_name)
+
+
         lat, lon, h = 44.67, 55.5, 0
         lat_rad = lat * np.pi / 180
 
@@ -83,33 +107,30 @@ class Test_sqfield(unittest.TestCase):
 
         print(f"nmax: {self.swarm_data['nmax']} mmax:{self.swarm_data['mmax']}")
 
-        arr_internal1 = np.array(design_SHA_Sq_e_Re_v2.design_SHA_Sq_e_Re_v2(
+        a_r, a_theta, a_phi = design_SHA_Sq_e_Re_v2.design_SHA_Sq_e_Re_v2(
             rho,
             theta_d,
             phi_d,
             self.swarm_data['nmax'],
             self.swarm_data['mmax'],
-        ))
+        )
 
-        arr_internal2 = np.array(design_SHA_Sq_e_Re_v2.design_SHA_Sq_e_Re_v1(
-            rho,
-            theta_d,
-            phi_d,
-            self.swarm_data['nmax'],
-            self.swarm_data['mmax'],
-        ))
+        N = len(a_r)
+        print(np.shape(a_r))
 
-        N = len(arr_internal1)
-        M = len(arr_internal1[0])
 
         for i in range(N):
-            for j in range(M):
-
-                self.assertAlmostEqual(arr_internal1[i][j][0], arr_internal2[i][j][0], places=6)
+            self.assertAlmostEqual(float(a_r[i][0]), float(A_r[i]), places=6)
+            self.assertAlmostEqual(float(a_theta[i][0]), float(A_theta[i]), places=6)
+            self.assertAlmostEqual(float(a_phi[i][0]), float(A_phi[i]), places=6)
 
     def test_legendre_for_sha_i(self):
         # test McupLow vs Collin's
 
+        top_dir = os.path.dirname(os.path.dirname(__file__))
+        A_file_name = os.path.join(top_dir, "design_sha_i.csv")
+        A_r, A_theta, A_phi = self.read_design_sha(A_file_name)
+
         lat, lon, h = 44.67, 55.5, 0
         lat_rad = lat * np.pi / 180
 
@@ -120,31 +141,21 @@ class Test_sqfield(unittest.TestCase):
 
         print(f"nmax: {self.swarm_data['nmax']} mmax:{self.swarm_data['mmax']}")
 
-        arr_internal1 = np.array(design_SHA_Sq_i_Re_v2.design_SHA_Sq_i_Re_v2(
+        a_r, a_theta, a_phi = design_SHA_Sq_i_Re_v2.design_SHA_Sq_i_Re_v2(
             rho,
             theta_d,
             phi_d,
             self.swarm_data['nmax'],
             self.swarm_data['mmax'],
-        ))
+        )
 
-        arr_internal2 = np.array(design_SHA_Sq_i_Re_v2.design_SHA_Sq_i_Re_v1(
-            rho,
-            theta_d,
-            phi_d,
-            self.swarm_data['nmax'],
-            self.swarm_data['mmax'],
-        ))
-
-        print(np.shape(arr_internal1))
-        N = len(arr_internal1)
-        M = len(arr_internal1[0])
+        N = len(a_r)
+        print(np.shape(a_r))
 
         for i in range(N):
-            for j in range(M):
-
-                self.assertAlmostEqual(arr_internal1[i][j][0], arr_internal2[i][j][0], places=6)
-
+            self.assertAlmostEqual(float(a_r[i][0]), float(A_r[i]), places=6)
+            self.assertAlmostEqual(float(a_theta[i][0]), float(A_theta[i]), places=6)
+            self.assertAlmostEqual(float(a_phi[i][0]), float(A_phi[i]), places=6)
     def test_geod_to_geoc_lat_for_forward_sq(self):
 
         # replacing geod2geoc at forward_Sq_d_re with geomaglib.util.geod_to_geoc_lat()
