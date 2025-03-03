@@ -1,8 +1,9 @@
 import datetime
 import numpy as np
+from typing import Union
 
 
-def jd2000_dt(year, month, day, UT=0, minutes=0):
+def jd2000_dt(year: Union[float, list], month: Union[float, list], day: Union[float, list], UT: Union[float, list]=0, minutes: Union[float, list]=0) -> np.ndarray:
     # set offset to 2000
     offset = datetime.datetime(2000, 1, 1)
     td_array = np.array([])

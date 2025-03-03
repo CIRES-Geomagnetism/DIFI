@@ -2,14 +2,15 @@ import math
 import numpy as np
 
 
+
 def gg2gm_2010(
-    theta_gg=None,
-    phi_gg=None,
+    theta_gg: np.ndarray=None,
+    phi_gg: np.ndarray=None,
     theta_gm=None,
     phi_gm=None,
     B_theta=None,
     B_phi=None,
-    get_R=False
+    get_R: bool=False
 ):
     # transformation between geographic (geocentric as opposed to geodetic)
     # and geomagnetic (dipole) co-ordinates
@@ -66,7 +67,7 @@ def gg2gm_2010(
     c_p_b = np.cos(phi_b*rad)
     c_t_b = np.cos(theta_b*rad)
     s_t_b = np.sin(theta_b*rad)
-    A = np.matrix(
+    A = np.array(
         [
             [c_t_b*c_p_b, c_t_b*s_p_b,  -s_t_b],
             [-s_p_b, c_p_b, 0],
@@ -121,9 +122,9 @@ def gg2gm_2010(
         c_p = np.cos(phi_gg*rad)
         s_p = np.sin(phi_gg*rad)
         R_1 = np.zeros((np.size(c_p, 0), 3, 3))
-        R_1[:, 0, :] = np.matrix([s_t*c_p, c_t*c_p, -s_p]).transpose()
-        R_1[:, 1, :] = np.matrix([s_t*s_p, c_t*s_p, c_p]).transpose()
-        R_1[:, 2, :] = np.matrix(
+        R_1[:, 0, :] = np.array([s_t*c_p, c_t*c_p, -s_p]).transpose()
+        R_1[:, 1, :] = np.array([s_t*s_p, c_t*s_p, c_p]).transpose()
+        R_1[:, 2, :] = np.array(
             [c_t, -s_t, np.zeros(np.size(c_p))]
         ).transpose()
         c_t = np.cos(theta_gm*rad)
@@ -131,9 +132,9 @@ def gg2gm_2010(
         c_p = np.cos(phi_gm*rad)
         s_p = np.sin(phi_gm*rad)
         R_2 = np.zeros((np.size(c_p, 0), 3, 3))
-        R_2[:, 0, :] = np.matrix([s_t*c_p, s_t*s_p, c_t]).transpose()
-        R_2[:, 1, :] = np.matrix([c_t*c_p, c_t*s_p, -s_t]).transpose()
-        R_2[:, 2, :] = np.matrix(
+        R_2[:, 0, :] = np.array([s_t*c_p, s_t*s_p, c_t]).transpose()
+        R_2[:, 1, :] = np.array([c_t*c_p, c_t*s_p, -s_t]).transpose()
+        R_2[:, 2, :] = np.array(
             [-s_p, c_p, np.zeros(np.size(c_p))]
         ).transpose()
         s_p_b = s_p_b*np.ones(np.size(c_p, 0))
@@ -143,13 +144,13 @@ def gg2gm_2010(
         # While they look like extra parentheticals these are necessary as
         # zeros takes a tuple as a parameter
         R_mag_geo = np.zeros((np.size(c_p, 0), 3, 3))
-        R_mag_geo[:, 0, :] = np.matrix(
+        R_mag_geo[:, 0, :] = np.array(
             [c_t_b*c_p_b, c_t_b*s_p_b, -s_t_b]
             ).transpose()
-        R_mag_geo[:, 1, :] = np.matrix(
+        R_mag_geo[:, 1, :] = np.array(
             [-s_p_b, c_p_b, np.zeros(np.size(c_p, 0))]
             ).transpose()
-        R_mag_geo[:, 2, :] = np.matrix(
+        R_mag_geo[:, 2, :] = np.array(
             [s_t_b*c_p_b, s_t_b*s_p_b, c_t_b]
             ).transpose()
         R_tmp = np.einsum('ijk,ikl->ijl', R_mag_geo, R_1)

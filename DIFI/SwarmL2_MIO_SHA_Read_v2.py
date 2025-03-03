@@ -2,7 +2,7 @@
 import numpy as np
 
 
-def SwarmL2_MIO_SHA_Read_v2(filename):
+def SwarmL2_MIO_SHA_Read_v2(filename: str) -> dict:
     # s = SwarmL2_MIO_SHA_Read(filename)
 
     # Purpose:

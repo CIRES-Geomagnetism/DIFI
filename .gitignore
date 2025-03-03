@@ -2,13 +2,13 @@
 .idea/
 
 *.log
-*.csv
 *.pyc
 *.out
-test_outputs.py
 
 env
 
 DIFI/*.pyc
 DIFI/__pycache__/
  __pycache__/
+DIFI.egg-info/
+dist/
