@@ -93,7 +93,7 @@ class Test_sqfield(unittest.TestCase):
         # test McupLow vs Collin's
 
         top_dir = os.path.dirname(os.path.dirname(__file__))
-        A_file_name = os.path.join(top_dir, "design_sha_e.csv")
+        A_file_name = os.path.join(top_dir, "tests","design_sha_e.csv")
         A_r, A_theta, A_phi = self.read_design_sha(A_file_name)
 
 
@@ -128,7 +128,7 @@ class Test_sqfield(unittest.TestCase):
         # test McupLow vs Collin's
 
         top_dir = os.path.dirname(os.path.dirname(__file__))
-        A_file_name = os.path.join(top_dir, "design_sha_i.csv")
+        A_file_name = os.path.join(top_dir, "tests", "design_sha_i.csv")
         A_r, A_theta, A_phi = self.read_design_sha(A_file_name)
 
         lat, lon, h = 44.67, 55.5, 0
