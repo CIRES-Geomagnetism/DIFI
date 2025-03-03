@@ -2,7 +2,6 @@ import unittest
 import os
 import numpy as np
 
-import output_results
 
 
 
