@@ -3,15 +3,20 @@
 The Dedicated Ionospheric Field Inversion (DIFI) model is a Swarm-based, global model of the Sq and equatorial electrojet magnetic fields at mid and low-latitudes. It describes variations with local time, season and solar flux and separates primary and induced magnetic fields.
 The latest version of DIFI is DIFI-7. Please see the [DIFI-7](https://geomag.colorado.edu/difi-7) for the detail.
 
+## Prerequirements
+
+- Officially Python 3.9, 3.10, 3.11. 3.12
+- geomaglib >= 1.1.5
+  - install by `pip install geomaglib==1.1.5`
+- numpy >= 2.0.2
+
+
 ## Installation
 Our team will release to PyPI soon. If you would like to install DIFI at this time, please clone our git repository or use the following instructions to install DIFI in your virtual environment.
 
-1. git clone the library
+1. `git clone git@github.com:CIRES-Geomagnetism/DIFI.git`
 2. At the top folder in step 1, use `pip install .` to install the DIFI to your virtual environment
 
-## Run the DIFI Module with Python
-
-DIFI 7 is developed and tested in Python 3.11.2 environment
 
 ## Quick Start
 
