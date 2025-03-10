@@ -1,3 +1,5 @@
+import warnings
+
 import numpy as np
 import os
 
@@ -57,15 +59,20 @@ def getSQfield(lat: Union[float, list], lon: Union[float, list], year: Union[int
         B_XYZ['Z'] = -1 * B_C[0]
         B_XYZ['Y'] = B_C[2]
         B_XYZ['X'] = -1 * B_C[1]
+
+        Bx, By, Bz = magmath.rotate_magvec(B_XYZ['X'], B_XYZ['Y'], B_XYZ['Z'], theta_gc, lat)
+
+        B_XYZ["X"] = Bx
+        B_XYZ["Y"] = By
+        B_XYZ["Z"] = Bz
     else:
-        raise ValueError(
+        warnings.warn(
             "Requested altitude {h} km is higher than 20 km".format(h=repr(h))
         )
+        B_XYZ["Z"] = 0
+        B_XYZ['Y'] = 0
+        B_XYZ['X'] = 0
 
 
-    Bx, By, Bz = magmath.rotate_magvec(B_XYZ['X'], B_XYZ['Y'], B_XYZ['Z'], theta_gc, lat)
 
-    B_XYZ["X"] = Bx
-    B_XYZ["Y"] = By
-    B_XYZ["Z"] = Bz
     return B_XYZ
