@@ -6,10 +6,10 @@ import sys
 sys.path.insert(1, baseDir + '/DIFI/')
 
 from DIFI import forward_Sq_d_Re
-from DIFI import geod2geoc
 from DIFI import jd2000_dt
 from DIFI import SwarmL2_F107_Read
 from DIFI import SwarmL2_MIO_SHA_Read_v2
+
 import numpy as np
 filename_DIFI = baseDir + 'DIFI/coefs/difi-coefs.txt'
 filename_f107 = baseDir + 'DIFI/coefs/f107.DBL'
@@ -101,7 +101,7 @@ def getSQfield(lat, lon, year, month, day, hour=0, minutes=0, h=0):
     # )
     B_XYZ = {}
     if h < 20:  # LIMIT ALTITUDE REQUESTS TO 20 KM.  Model invalid above!
-        [r_gc, theta_gc] = geod2geoc.geod2geoc(np.radians(lat), h)
+        [r_gc, theta_gc] = util.geod2geoc(np.radians(lat), h)
         r_gc = a + h
         theta_gc = np.degrees(theta_gc)
         # print "Difi input", r_gc, theta_gc, RV['lon'], sq_t, f107_1

@@ -79,11 +79,11 @@ def forward_Sq_d_Re(r: Union[float, list], theta: Union[float, list], phi: Union
         or np.size(t) != np.size(f107)
     ):
         print(
-            np.size(t),
-            np.size(rho),
-            np.size(theta),
-            np.size(phi),
-            np.size(f107),
+            np.size(t),"np.size(t)",
+            np.size(rho),"np.size(rho)",
+            np.size(theta),"np.size(theta)",
+            np.size(phi),"np.size(phi)",
+            np.size(f107),"np.size(f107)"
         )
         raise Exception(r"Variables must be of equal size (or scalars)")
 

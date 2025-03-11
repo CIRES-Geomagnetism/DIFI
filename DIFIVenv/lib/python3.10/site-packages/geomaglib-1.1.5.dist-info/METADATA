@@ -1,0 +1,22 @@
+Metadata-Version: 2.2
+Name: geomaglib
+Version: 1.1.5
+Summary: The core library for building geomag model.
+Author-email: Li-Yin Young <liyin.young@noaa.gov>, Collin Kadlecek <collin.kadlecek@noaa.gov>
+Maintainer-email: Li-Yin Young <liyin.young@noaa.gov>, Collin Kadlecek <collin.kadlecek@noaa.gov>
+Project-URL: Homepage, https://github.com/CIRES-Geomagnetism/geomaglib
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Description-Content-Type: text/markdown
+Requires-Dist: numpy>=2.0.2
+
+# geomaglib
+
+The git repository includes the core functions for building geomag model.
+
