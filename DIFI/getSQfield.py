@@ -4,8 +4,6 @@ import numpy as np
 import os
 
 from DIFI import jd2000_dt
-from functools import lru_cache
-from DIFI import geod2geoc
 from DIFI import forward_Sq_d_Re
 from DIFI import get_f107_index
 from geomaglib import util, magmath
