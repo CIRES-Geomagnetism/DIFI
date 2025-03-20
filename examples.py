@@ -50,108 +50,20 @@ def main():
     month = 6
     day = 10
     hours = np.linspace(1,22,Num_elements)
-    outfile = "20250320_outputs_difi_vectorized.csv"
+    height = np.linspace(1,22,Num_elements)
+    outfile = "example_out_difi_vectorized.csv"
 
-    vectorized_out_difi_new_write_file(outfile, lats, lons, hours, year, month, day, write_inputs= False)
-    B = vectorized_out_difi_new_return_dict(lats, lons, hours, year, month, day)
+    height = np.linspace(1,19,Num_elements)
+    height = 11000
+    vectorized_out_difi_new_write_file(outfile, height, lats, lons, hours, year, month, day, write_inputs= False)
+    B = vectorized_out_difi_new_return_dict(height,lats, lons, hours, year, month, day)
     print()
-    print(
-        "This is a time series of the field for the 5th day "
-        "of each month in 2023"
-    )
     print(
         "\n" , type(B) ,np.shape(B['X']),np.shape(B['Y']),np.shape(B['Z']), "\n"
     )
 
     print("If you have any questions about the software please contact")
     print("Li-Yin Young at: liyin.young@noaa.gov")
-
-
-def getSQfield(lat, lon, year, month, day, hour=0, minutes=0, h=0):
-    """
-    Input:
-        Latitude, lat (in WGS-84 coordinates)
-        Longtitude, lon
-        An array of year, year (Only good between 2014.0 and 2025.0
-        An array of months, month
-        An array of days, day
-
-    Optional Input:
-        An array of hours, hour
-        An array of minutes, minutes
-        Height above WGS84 ellipsoid, h
-
-    Output:
-        B, the magnetic field due to the SQ in WGS-84 coordinates
-    """
-    a = 6371.2
-    start_time = 5114.0
-    end_time = 9131.5
-    sq_t = jd2000_dt.jd2000_dt(year, month, day, hour, minutes)
-    frac_arr = sq_t - np.floor(sq_t)
-    f107_1 = np.array([])
-    for i in range(np.size(sq_t)):
-        if sq_t[i] < start_time:
-            raise Exception(
-                "Request before 2014.0 reached difi calculation improper"
-            )
-        elif sq_t[i] > end_time:
-            raise Exception(
-                "Request after 2025.0 reached difi calculation improperly"
-            )
-        while sq_t[i] < 5114.0:
-            sq_t[i] += 365
-        j = 0
-        while difi_t_f107[j] < sq_t[i]:
-            j += 1
-        f107_1 = np.append(
-            f107_1,
-            difi_f107[j] * frac_arr[i] + difi_f107[j - 1] * (1 - frac_arr[i])
-        )
-    # index_f107 = [
-    #     i for i in range(len(difi_t_f107))
-    #     if (
-    #         difi_t_f107[i] >= math.floor(sq_t)
-    #         and difi_t_f107[i] <= math.ceil(sq_t)
-    #     )
-    # ]
-    # frac = sq_t - math.floor(sq_t)
-    # f107_1 = np.multiply(
-    #     difi_f107[index_f107[0]]
-    #     * (1-frac) + difi_f107[index_f107[-1]]*(frac),
-    #     np.ones(1),
-    # )
-    B_XYZ = {}
-    if h < 20:  # LIMIT ALTITUDE REQUESTS TO 20 KM.  Model invalid above!
-        [r_gc, theta_gc] = util.geod2geoc(np.radians(lat), h)
-        r_gc = a + h
-        theta_gc = np.degrees(theta_gc)
-        # print "Difi input", r_gc, theta_gc, RV['lon'], sq_t, f107_1
-        [B_1, B_2] = forward_Sq_d_Re.forward_Sq_d_Re(
-            r_gc,
-            theta_gc,
-            lon,
-            sq_t,
-            f107_1,
-            s,
-        )
-        # print "Difi output", B_1, B_2
-        B_C = B_1 + B_2
-        # B_C = B_1
-        B_XYZ['Z'] = -1 * B_C[0]
-        B_XYZ['Y'] = B_C[2]
-        B_XYZ['X'] = -1 * B_C[1]
-    else:
-        raise ValueError(
-            "Requested altitude {h} km is higher than 20 km".format(h=repr(h))
-        )
-        B_XYZ['Z'] = 0
-        B_XYZ['Y'] = 0
-        B_XYZ['X'] = 0
-    B = RotateMagneticVector(B_XYZ, 90 - theta_gc, lat)
-    # B = B_XYZ
-    return B, f107_1
-
 
 def RotateMagneticVector(B_geoc, lat_geoc, latitude):
     # Rotate the Magnetic Vectors to Geodetic Coordinates

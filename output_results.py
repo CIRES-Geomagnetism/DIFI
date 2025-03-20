@@ -8,12 +8,12 @@ from DIFI import getSQfield as new_sqfield
 import numpy as np
 import os
 
-def vectorized_out_difi_new_return_dict(lats, lons, hours, year, month, day):
-    B = new_sqfield(lats, lons, year, month, day, hour=hours)
+def vectorized_out_difi_new_return_dict(height, lats, lons, hours, year, month, day):
+    B = new_sqfield(lats, lons, year, month, day, hour=hours, h = height)
     return B
-def vectorized_out_difi_new_write_file(outfile, lats, lons, hours, year, month, day,write_inputs = False):
+def vectorized_out_difi_new_write_file(outfile, height, lats, lons, hours, year, month, day,write_inputs = False):
     with open(outfile, "w") as file:
-        B = new_sqfield(lats, lons, year, month, day, hour=hours)
+        B = new_sqfield(lats, lons, year, month, day, hour=hours, h = height)
         for i in range(0, len(B['X'])):
             if(not write_inputs):
                 file.write(str(B['X'][i]) + "," + str(B['Y'][i]) + "," + str(B['Z'][i]) + "\n")
@@ -23,15 +23,17 @@ def vectorized_out_difi_new_write_file(outfile, lats, lons, hours, year, month, 
 def main():
 
     Num_elements = 1000
-    lats = np.linspace(-90.0, 90.0, Num_elements)
+    lats = list(np.linspace(-90.0, 90.0, Num_elements))
     lons = np.linspace(-180.0, 360.0, Num_elements)
     year = 2024
     month = 6
     day = 10
-    hours = np.linspace(1,22,Num_elements)
+    hours = np.linspace(1,22,Num_elements)  
+    height = np.linspace(1,22,Num_elements)
     outfile = "20250320_outputs_difi_vectorized.csv"
 
-    vectorized_out_difi_new_write_file(outfile, lats, lons, hours, year, month, day, write_inputs= False)
+    vectorized_out_difi_new_write_file(outfile, height,lats, lons, hours, year, month, day, write_inputs= False)
+    vectorized_out_difi_new_return_dict(height,lats, lons, hours, year, month, day)
 
 
 if __name__=="__main__":

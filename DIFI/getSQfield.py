@@ -39,7 +39,8 @@ def getSQfield(lat: Union[float, list], lon: Union[float, list], year: Union[int
     #print("split ", n, time.time() - time1)#1
     n+=1
     B_XYZ = {}
-    if h < 20:  # LIMIT ALTITUDE REQUESTS TO 20 KM.  Model invalid above!
+    h = np.array(h)
+    if np.all(h < 20):  # LIMIT ALTITUDE REQUESTS TO 20 KM.  Model invalid above!
         r_gc, theta_gc = util.geod_to_geoc_lat(lat, h)
         r_gc = a + h
         cotheta_gc = 90 - theta_gc
@@ -69,13 +70,42 @@ def getSQfield(lat: Union[float, list], lon: Union[float, list], year: Union[int
         B_XYZ["X"] = Bx
         B_XYZ["Y"] = By
         B_XYZ["Z"] = Bz
+    elif(np.any(h > 1000)):
+        raise ValueError("An input height is out of the valid altitude range of Difi: <1000km")
     else:
         warnings.warn(
-            "Requested altitude {h} km is higher than 20 km".format(h=repr(h))
+            "A value in the inputs is higher than 20km"
+            # "Requested altitude {h} km is higher than 20 km".format(h=repr(h))
         )
-        B_XYZ["Z"] = 0
-        B_XYZ['Y'] = 0
-        B_XYZ['X'] = 0
+        r_gc, theta_gc = util.geod_to_geoc_lat(lat, h)
+        r_gc = a + h
+        cotheta_gc = 90 - theta_gc
+
+        #print("split ", n, time.time() - time1)#2
+        n+=1
+        # print "Difi input", r_gc, theta_gc, RV['lon'], sq_t, f107_1
+        [B_1, B_2] = forward_Sq_d_Re.forward_Sq_d_Re(
+            r_gc,
+            cotheta_gc,
+            lon,
+            sq_t,
+            f107_1,
+            get_f107_index.swarm_data,
+        )
+        #print("split ", n, time.time() - time1)#3
+        n+=1 
+        B_C = B_1 + B_2
+        # B_C = B_1
+        B_XYZ['Z'] = -1 * B_C[0]
+        B_XYZ['Y'] = B_C[2]
+        B_XYZ['X'] = -1 * B_C[1]
+
+        Bx, By, Bz = magmath.rotate_magvec(B_XYZ['X'], B_XYZ['Y'], B_XYZ['Z'], theta_gc, lat)
+        #print("split ", n, time.time() - time1)#4
+        n+=1
+        B_XYZ["X"] = Bx
+        B_XYZ["Y"] = By
+        B_XYZ["Z"] = Bz
 
 
 
