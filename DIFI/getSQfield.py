@@ -28,15 +28,15 @@ def getSQfield(lat: Union[float, list], lon: Union[float, list], year: Union[int
     a = 6371.2
     start_time = 5114.0
     import time
-    time1 = time.time()
+    time1 = time.time() 
     end_time = float(get_f107_index.difi_t_f107[-1])
     sq_t = jd2000_dt.jd2000_dt(year, month, day, hour, minutes)
     n = 0
-    print("split ", n, time.time() - time1)#0
+    #print("split ", n, time.time() - time1)#0
     n+=1
     if f107_1 is None:
         f107_1 = get_f107_index.get_f107_index(sq_t, start_time, end_time)
-    print("split ", n, time.time() - time1)#1
+    #print("split ", n, time.time() - time1)#1
     n+=1
     B_XYZ = {}
     if h < 20:  # LIMIT ALTITUDE REQUESTS TO 20 KM.  Model invalid above!
@@ -44,7 +44,7 @@ def getSQfield(lat: Union[float, list], lon: Union[float, list], year: Union[int
         r_gc = a + h
         cotheta_gc = 90 - theta_gc
 
-        print("split ", n, time.time() - time1)#2
+        #print("split ", n, time.time() - time1)#2
         n+=1
         # print "Difi input", r_gc, theta_gc, RV['lon'], sq_t, f107_1
         [B_1, B_2] = forward_Sq_d_Re.forward_Sq_d_Re(
@@ -55,7 +55,7 @@ def getSQfield(lat: Union[float, list], lon: Union[float, list], year: Union[int
             f107_1,
             get_f107_index.swarm_data,
         )
-        print("split ", n, time.time() - time1)#3
+        #print("split ", n, time.time() - time1)#3
         n+=1 
         B_C = B_1 + B_2
         # B_C = B_1
@@ -64,7 +64,7 @@ def getSQfield(lat: Union[float, list], lon: Union[float, list], year: Union[int
         B_XYZ['X'] = -1 * B_C[1]
 
         Bx, By, Bz = magmath.rotate_magvec(B_XYZ['X'], B_XYZ['Y'], B_XYZ['Z'], theta_gc, lat)
-        print("split ", n, time.time() - time1)#4
+        #print("split ", n, time.time() - time1)#4
         n+=1
         B_XYZ["X"] = Bx
         B_XYZ["Y"] = By

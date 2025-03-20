@@ -16,7 +16,7 @@ class Test_branch_results(unittest.TestCase):
         self.difi_main_file = os.path.join(cur_dir, main_filename)
         self.difi_py3_file = os.path.join(cur_dir, branch_filename)
 
-
+    
     def read_file(self, filename):
 
         Bx, By, Bz = [], [], []

@@ -25,7 +25,8 @@ def get_f107_index(sq_t: list, start_time: float, end_time: float) ->np.ndarray:
 
     frac_arr = sq_t - np.floor(sq_t)
     f107_1 = np.array([])
-
+    while1 = 0
+    while2 = 0
     for i in range(np.size(sq_t)):
         if sq_t[i] < start_time:
             raise Exception(
