@@ -32,7 +32,6 @@ def main():
     outfile = "20250320_outputs_difi_vectorized.csv"
 
     vectorized_out_difi_new_write_file(outfile, lats, lons, hours, year, month, day, write_inputs= False)
-    outfile = "20250319_outputs_difi_new.csv"
 
 
 if __name__=="__main__":
