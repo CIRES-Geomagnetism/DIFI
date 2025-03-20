@@ -8,7 +8,7 @@ from DIFI import getSQfield as new_sqfield
 import numpy as np
 import os
 
-def vectorized_out_difi_new_return_arr(lats, lons, hours, year, month, day):
+def vectorized_out_difi_new_return_dict(lats, lons, hours, year, month, day):
     B = new_sqfield(lats, lons, year, month, day, hour=hours)
     return B
 def vectorized_out_difi_new_write_file(outfile, lats, lons, hours, year, month, day,write_inputs = False):

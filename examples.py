@@ -11,7 +11,7 @@ from DIFI import SwarmL2_F107_Read
 from DIFI import SwarmL2_MIO_SHA_Read_v2
 from DIFI import getSQfield as new_sqfield
 
-from output_results import vectorized_out_difi_new_write_file, vectorized_out_difi_new_return_arr
+from output_results import vectorized_out_difi_new_write_file, vectorized_out_difi_new_return_dict
 
 import numpy as np
 filename_DIFI = baseDir + 'DIFI/coefs/difi-coefs.txt'
@@ -53,7 +53,7 @@ def main():
     outfile = "20250320_outputs_difi_vectorized.csv"
 
     vectorized_out_difi_new_write_file(outfile, lats, lons, hours, year, month, day, write_inputs= False)
-    B = vectorized_out_difi_new_return_arr(lats, lons, hours, year, month, day)
+    B = vectorized_out_difi_new_return_dict(lats, lons, hours, year, month, day)
     print()
     print(
         "This is a time series of the field for the 5th day "
