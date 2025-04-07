@@ -54,6 +54,8 @@ class test_getSQfield(unittest.TestCase):
                     B_expect = Bxyz_expected[cmpnt]
                     self.assertAlmostEqual(B_test,B_expect,places=6)
 
+    # TODO Need to test zero-ing when altitude out of range
+
     def test_inputs_scalar_except_one_list(self):
         point = self.points[0]
         input_names = ['lat','lon','year','month','day','hour','minutes','h']
