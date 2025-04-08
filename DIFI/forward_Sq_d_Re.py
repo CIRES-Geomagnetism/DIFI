@@ -10,7 +10,7 @@ from DIFI import design_SHA_Sq_i_Re_v2
 from DIFI import design_SHA_Sq_e_Re_v2
 
 
-def forward_Sq_d_Re(r: Union[float, list], theta: Union[float, list], phi: Union[float, list], t: Union[float, list], f107: Union[float, list], s: dict, zero_B_above_20km: bool=False) -> tuple[np.ndarray, np.ndarray]:
+def forward_Sq_d_Re(r: Union[float, list], theta: Union[float, list], phi: Union[float, list], t: Union[float, list], f107: Union[float, list], s: dict) -> tuple[np.ndarray, np.ndarray]:
     # [B_1,B_2] = forward_Sq_d_Re(r,theta,phi,t,f107,s)
 
     # Calculate the primary (1) and induced (2) Sq magnetic field from a model
@@ -214,20 +214,5 @@ def forward_Sq_d_Re(r: Union[float, list], theta: Union[float, list], phi: Union
     w = (1 + s['N']*f107)
     B_1 = B_1_tmp * w
     B_2 = B_2_tmp * w
-
-    # Handle 20km altitude limit
-    above_20km = rho>rho_20km
-    n_above = np.count_nonzero(above_20km)
-    if n_above > 0:
-        warnstr = f"{n_above} points with altitude > DIFI recommended max (20 km)"
-        if not zero_B_above_20km:
-            warnstr += " set kwarg zero_B_above_20km=True to"
-            warnstr += " enforce zero B field outside of DIFI altitude range"
-        warnings.warn(warnstr)
-
-        # Zero out invalid altitude points 
-        if zero_B_above_20km:
-            B_1[:,rho>rho_20km]=0.
-            B_2[:,rho>rho_20km]=0.
 
     return B_1, B_2

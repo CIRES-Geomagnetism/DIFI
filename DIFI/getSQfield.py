@@ -59,8 +59,7 @@ def getSQfield(lat: Union[float, list], lon: Union[float, list], year: Union[int
         lon,
         sq_t,
         f107_1,
-        get_f107_index.swarm_data,
-        zero_B_above_20km=True
+        get_f107_index.swarm_data
     )
     # print "Difi output", B_1, B_2
     B_C = B_1 + B_2
