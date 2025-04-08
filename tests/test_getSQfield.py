@@ -5,6 +5,8 @@ import csv  # from Python stdlib
 import numpy as np
 
 from DIFI.getSQfield import getSQfield
+from DIFI import jd2000_dt
+from DIFI import get_f107_index
 
 # The data files will be in the same directory as this test script
 inputs_file_path = Path(__file__).parent / "20250319_outputs_inputs_difi_pypidifi7.csv"
@@ -30,8 +32,18 @@ class test_getSQfield(unittest.TestCase):
         rng = np.random.default_rng(42)
         subset_inds = rng.integers(low=0,high=len(points),size=100).tolist()
         self.points = [points[ind] for ind in subset_inds]
-        
-
+  
+    def get_f107(self,point):
+        start_time = 5114.0
+        end_time = float(get_f107_index.difi_t_f107[-1])
+        sq_t = jd2000_dt.jd2000_dt(point['year'], 
+                                   point['month'], 
+                                   point['day'], 
+                                   point['hour'],
+                                    point['minutes'])
+        f107 = get_f107_index.get_f107_index(sq_t, start_time, end_time)
+        return f107.tolist()[0] #returns an array and we just want float 
+    
     def test_all_scalar(self):
         for point in self.points:
             Bxyz_test = getSQfield(lat=point['lat'],
@@ -54,11 +66,29 @@ class test_getSQfield(unittest.TestCase):
                     B_expect = Bxyz_expected[cmpnt]
                     self.assertAlmostEqual(B_test,B_expect,places=6)
 
-    # TODO Need to test zero-ing when altitude out of range
+    def test_zero_B_above_20km_altitude(self):
+        """verify B gets zero'd above 20 km altitude"""
+        point = self.points[0].copy() #make a copy so we don't overwrite original
+        point['h']=21. #set altitude above 20 km
+        Bxyz_test = getSQfield(lat=point['lat'],
+                            lon=point['lon'],
+                            year=point['year'],
+                            month=point['month'],
+                            day=point['day'],
+                            hour=point['hour'],
+                            minutes=point['minutes'],
+                            h=point['h'],
+                            f107_1=None)
+
+        for cmpnt in ['X','Y','Z']:
+            with self.subTest(f'B{cmpnt} {point}'):
+                B_test = Bxyz_test[cmpnt][0]
+                self.assertAlmostEqual(B_test,0.,places=6)
 
     def test_inputs_scalar_except_one_list(self):
-        point = self.points[0]
-        input_names = ['lat','lon','year','month','day','hour','minutes','h']
+        point = self.points[0].copy() #make a copy so we don't overwrite original
+        point['f107_1']=self.get_f107(point)
+        input_names = ['lat','lon','year','month','day','hour','minutes','h','f107_1']
         scalar_getSQfield_inputs = {key:point[key] for key in input_names}
         for input_name in input_names:
             with self.subTest(f'Test {input_name} is a list'):

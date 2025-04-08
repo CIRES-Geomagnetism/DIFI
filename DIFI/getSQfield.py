@@ -10,7 +10,7 @@ from geomaglib import util, magmath
 from typing import Optional, Union
 
 
-def getSQfield(lat: Union[float, list], lon: Union[float, list], year: Union[int, list], month: Union[int, list], day: Union[int, list], hour: Union[int, list]=0, minutes: Union[int, list]=0, h: Union[float, list]=0, f107_1: Optional[list]=None) -> dict:
+def getSQfield(lat: Union[float, list], lon: Union[float, list], year: Union[int, list], month: Union[int, list], day: Union[int, list], hour: Union[int, list]=0, minutes: Union[int, list]=0, h: Union[float, list]=0, f107_1: Optional[Union[float, list]]=None) -> dict:
     """
     Input:
         Latitude, lat (in WGS-84 coordinates)
@@ -30,6 +30,10 @@ def getSQfield(lat: Union[float, list], lon: Union[float, list], year: Union[int
 
     earth_radius_km = 6371.2
     
+    #forward_Sq_d_Re implicitly expects flat numpy arrays as inputs
+    #some inputs are converted to equivalent numpy arrays by the
+    #coordinate or time transformations, but there a few which 
+    #need to be explicitly cast:
     lat = np.array(lat).flatten()
     lon = np.array(lon).flatten()
     h = np.array(h).flatten()
@@ -44,7 +48,9 @@ def getSQfield(lat: Union[float, list], lon: Union[float, list], year: Union[int
 
     if f107_1 is None:
         f107_1 = get_f107_index.get_f107_index(sq_t, start_time, end_time)
-
+    else:
+        f107_1 = np.array(f107_1).flatten()
+        
     B_XYZ = {}
     # print "Difi input", r_gc, theta_gc, RV['lon'], sq_t, f107_1
     [B_1, B_2] = forward_Sq_d_Re.forward_Sq_d_Re(
