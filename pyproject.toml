@@ -1,6 +1,6 @@
 [project]
 name = "pyDIFI"
-version = "7.1.4"
+version = "7.2.0"
 authors = [
   { name="Li-Yin Young", email="liyin.young@noaa.gov" },
   { name="Liam Kilcommons", email="liam.kilcommons@colorado.edu" }
