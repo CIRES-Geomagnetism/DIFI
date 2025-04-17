@@ -1,8 +1,9 @@
 [project]
 name = "pyDIFI"
-version = "7.1.3"
+version = "7.1.4"
 authors = [
   { name="Li-Yin Young", email="liyin.young@noaa.gov" },
+  { name="Liam Kilcommons", email="liam.kilcommons@colorado.edu" }
 ]
 description = "The python module for DIFI-7"
 readme = "README.md"
