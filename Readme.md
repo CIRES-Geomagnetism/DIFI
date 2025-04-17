@@ -6,16 +6,15 @@ The latest version of DIFI is DIFI-7. Please see the [DIFI-7](https://geomag.col
 ## Prerequirements
 
 - Officially Python 3.9, 3.10, 3.11. 3.12
-- geomaglib >= 1.1.5
-  - install by `pip install geomaglib==1.1.5`
-- numpy >= 2.0.2
+- geomaglib >= 1.2.1
+  - install by `pip install geomaglib>=1.2.1`
+- numpy 
 
 
 ## Installation
 Our team will release to PyPI soon. If you would like to install DIFI at this time, please clone our git repository or use the following instructions to install DIFI in your virtual environment.
 
-1. `git clone git@github.com:CIRES-Geomagnetism/DIFI.git`
-2. At the top folder in step 1, use `pip install .` to install the DIFI to your virtual environment
+`pip install git+https://github.com/CIRES-Geomagnetism/DIFI.git@main`
 
 
 ## Quick Start
