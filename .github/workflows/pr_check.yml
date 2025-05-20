@@ -1,4 +1,4 @@
-name: difi ci pipeline
+name: difi pull request pipeline
 
 on:
   pull_request:
