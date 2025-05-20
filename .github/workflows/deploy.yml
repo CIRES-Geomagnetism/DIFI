@@ -52,7 +52,7 @@ jobs:
         shell: bash
         run: |
           python -m pip install --upgrade pip
-          pip install difi-7.2.0-py3-none-any.whl
+          pip install pydifi-7.2.0-py3-none-any.whl
 
       - name: Test installation
         shell: bash
