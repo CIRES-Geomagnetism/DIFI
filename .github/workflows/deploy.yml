@@ -49,6 +49,7 @@ jobs:
           path: dist
 
       - name: Flatten wheel files
+        shell: bash
         run: |
           mkdir all_wheels
           find dist -name '*.whl' -exec cp {} all_wheels/ \;
