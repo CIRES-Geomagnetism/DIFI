@@ -88,5 +88,6 @@ jobs:
 
         with:
           files: all_wheels/*.whl
+          draft: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
