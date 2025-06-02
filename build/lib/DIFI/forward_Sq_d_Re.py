@@ -101,7 +101,6 @@ def forward_Sq_d_Re(r: Union[float, list], theta: Union[float, list], phi: Union
         + datetime.datetime(2000, 1, 1)
         for t_iter in t
     ]
-
     year = [t_iter.year for t_iter in t_1]
     ndays = np.zeros(np.size(year))
     for i in range(len(year)):
@@ -119,6 +118,7 @@ def forward_Sq_d_Re(r: Union[float, list], theta: Union[float, list], phi: Union
     # not inlcuded in HDGM version
     t_season = t_season.flatten()
     t_mut = getmut.getmut(t, s['theta_NGP'], s['phi_NGP'])
+
     # calculate dipolar coordinates + matrix R
     theta_d, phi_d, rotmat = gg2gm_2010.gg2gm_2010(theta, phi, get_R=True)
 
@@ -151,26 +151,21 @@ def forward_Sq_d_Re(r: Union[float, list], theta: Union[float, list], phi: Union
     time_arr = time_arr.transpose(1, 0, 2).reshape(-1, N_data)
 
     # CASE #1: above Sq currents
+
     if (min(rho) > rho_Sq):
         B_1_tmp = np.einsum(
-            'ij, lik, jk ->lk',
+            'ij, ikl, jk ->lk',
             s['m_e_d_Re'],
             arr_internal,
             time_arr,
         )
 
         B_2_tmp = np.einsum(
-            'ij, lik, jk ->lk',
+            'ij, ikl, jk ->lk',
             s['m_i_d_Re'],
             arr_internal,
             time_arr,
         )
-
-        # for i in range(10):
-        #     print("B1", B_1_tmp[:,i])#, s['m_e_d_Re'][i], s['m_i_d_Re'][i],arr_internal[i],time_arr[i])
-        #     print("B2", B_2_tmp[:,i])
-        # # print(B_1_tmp, B_2_tmp)
-        print('shape ot things', np.shape(s['m_i_d_Re']), np.shape(time_arr), np.shape(arr_internal))
     # CASE #2: below Sq currents
     elif (max(rho) < rho_Sq):
         arr_external = np.array(
@@ -215,13 +210,9 @@ def forward_Sq_d_Re(r: Union[float, list], theta: Union[float, list], phi: Union
         B_2_tmp[[1, 2]],
     )
 
-    for i in range(10):
-        print("B1", B_1_tmp[:,i])#, s['m_e_d_Re'][i], s['m_i_d_Re'][i],arr_internal[i],time_arr[i])
-        print("B2", B_2_tmp[:,i])
-    # print(B_1_tmp, B_2_tmp)
     # correct for F10.7 dependence
     w = (1 + s['N']*f107)
     B_1 = B_1_tmp * w
     B_2 = B_2_tmp * w
-    print("irtnsei", B_1[0])
-    return B_1, B_2 
+
+    return B_1, B_2

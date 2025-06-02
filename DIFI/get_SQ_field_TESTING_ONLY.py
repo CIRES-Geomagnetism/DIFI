@@ -8,7 +8,17 @@ from DIFI import forward_Sq_d_Re
 # from DIFI import get_f107_index
 from geomaglib import util, magmath
 from typing import Optional, Union
-
+"""
+=======================================
+=======================================
+=======================================
+"""
+print("This file will always import and run xDIFI")
+"""
+=======================================
+=======================================
+=======================================
+"""
 
 def getSQfield(lat: Union[float, list], lon: Union[float, list], year: Union[int, list], month: Union[int, list], day: Union[int, list], hour: Union[int, list]=0, minutes: Union[int, list]=0, h: Union[float, list]=0, f107_1: Optional[Union[float, list]]=None) -> dict:
     """
@@ -46,14 +56,9 @@ def getSQfield(lat: Union[float, list], lon: Union[float, list], year: Union[int
     
     # end_time = float(get_f107_index.difi_t_f107[-1])
     sq_t = jd2000_dt.jd2000_dt(year, month, day, hour, minutes)
-    if (sq_t < 5114.0):
-        print("importing coeff from xdifi")
-        from DIFI import get_f107_index_xDIFI as get_f107_index
-        end_time = float(get_f107_index.difi_t_f107[-1])
-    else:
-        print("importing coeff from difi8")
-        from DIFI import get_f107_index_DIFI8 as get_f107_index
-        end_time = float(get_f107_index.difi_t_f107[-1])
+    from DIFI import get_f107_index_xDIFI as get_f107_index
+    end_time = float(get_f107_index.difi_t_f107[-1])
+
     if f107_1 is None:
         f107_1 = get_f107_index.get_f107_index(sq_t, start_time, end_time)
     else:
@@ -61,7 +66,6 @@ def getSQfield(lat: Union[float, list], lon: Union[float, list], year: Union[int
         
     B_XYZ = {}
     # print "Difi input", r_gc, theta_gc, RV['lon'], sq_t, f107_1
-    
     [B_1, B_2] = forward_Sq_d_Re.forward_Sq_d_Re(
         r_gc,
         cotheta_gc,

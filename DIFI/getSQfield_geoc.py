@@ -10,7 +10,7 @@ from geomaglib import util, magmath
 from typing import Optional, Union
 
 
-def getSQfield(lat: Union[float, list], lon: Union[float, list], year: Union[int, list], month: Union[int, list], day: Union[int, list], hour: Union[int, list]=0, minutes: Union[int, list]=0, h: Union[float, list]=0, f107_1: Optional[Union[float, list]]=None) -> dict:
+def getSQfield_geoc(lat: Union[float, list], lon: Union[float, list], year: Union[int, list], month: Union[int, list], day: Union[int, list], hour: Union[int, list]=0, minutes: Union[int, list]=0, h: Union[float, list]=0, f107_1: Optional[Union[float, list]]=None) -> dict:
     """
     Input:
         Latitude, lat (in WGS-84 coordinates)
@@ -38,10 +38,12 @@ def getSQfield(lat: Union[float, list], lon: Union[float, list], year: Union[int
     lon = np.array(lon).flatten()
     h = np.array(h).flatten()
     
-    r_gc, theta_gc = util.geod_to_geoc_lat(lat, h)
+    # r_gc, theta_gc = util.geod_to_geoc_lat(lat, h)
+    theta_gc = lat
     r_gc = earth_radius_km + h
     cotheta_gc = 90 - theta_gc
-
+    print("change this back to converting theta to cotheta")
+    cotheta_gc = theta_gc
     start_time = 5114.0
     
     # end_time = float(get_f107_index.difi_t_f107[-1])
