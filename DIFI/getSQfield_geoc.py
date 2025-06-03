@@ -10,11 +10,11 @@ from geomaglib import util, magmath
 from typing import Optional, Union
 
 
-def getSQfield(lat: Union[float, list], lon: Union[float, list], year: Union[int, list], month: Union[int, list], day: Union[int, list], hour: Union[int, list]=0, minutes: Union[int, list]=0, h: Union[float, list]=0, f107_1: Optional[Union[float, list]]=None) -> dict:
+def getSQfield_geoc(lat: Union[float, list], lon: Union[float, list], year: Union[int, list], month: Union[int, list], day: Union[int, list], hour: Union[int, list]=0, minutes: Union[int, list]=0, h: Union[float, list]=0, f107_1: Optional[Union[float, list]]=None) -> dict:
     """
     Input:
-        Latitude, lat (in WGS-84 coordinates)
-        Longtitude, lon
+        Latitude, lat (-90,90)
+        Longtitude, lon 
         An array of year, year (Only good between 2014.0 and 2025.0
         An array of months, month
         An array of days, day
@@ -22,7 +22,7 @@ def getSQfield(lat: Union[float, list], lon: Union[float, list], year: Union[int
     Optional Input:
         An array of hours, hour
         An array of minutes, minutes
-        Height above WGS84 ellipsoid, h
+        Height above sphere, h
 
     Output:
         B, the magnetic field due to the SQ in WGS-84 coordinates
@@ -38,10 +38,9 @@ def getSQfield(lat: Union[float, list], lon: Union[float, list], year: Union[int
     lon = np.array(lon).flatten()
     h = np.array(h).flatten()
     
-    r_gc, theta_gc = util.geod_to_geoc_lat(lat, h)
+    theta_gc = lat
     r_gc = earth_radius_km + h
     cotheta_gc = 90 - theta_gc
-
     start_time = 5114.0
     
     # end_time = float(get_f107_index.difi_t_f107[-1])
@@ -60,7 +59,6 @@ def getSQfield(lat: Union[float, list], lon: Union[float, list], year: Union[int
         f107_1 = np.array(f107_1).flatten()
         
     B_XYZ = {}
-    # print "Difi input", r_gc, theta_gc, RV['lon'], sq_t, f107_1
     
     [B_1, B_2] = forward_Sq_d_Re.forward_Sq_d_Re(
         r_gc,

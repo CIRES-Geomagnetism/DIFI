@@ -3,7 +3,7 @@ import math
 from memory_profiler import profile
 from DIFI import SwarmL2_F107_Read
 from DIFI import SwarmL2_MIO_SHA_Read_v2
-from examples import getSQfield
+from DIFI import getSQfield
 from DIFI import getSQfield as new_sqfield
 
 import numpy as np
@@ -25,7 +25,7 @@ def out_difi_old(outfile, lats, lons, hours, year, month, day):
 		for lat in lats:
 			for lon in lons:
 				for hour in hours:
-					B, f107 = getSQfield(lat, lon, year, month, day, hour=hour)
+					B = getSQfield(lat, lon, year, month, day, hour=hour)
 
 
 
