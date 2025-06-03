@@ -11,22 +11,6 @@ def load_coefs() -> tuple[list, list]:
 
     return difi_t_f107, difi_f107
 
-# @lru_cache(maxsize=1)
-# def load_swarm() -> dict:
-#     baseDir = os.path.dirname(__file__)
-#     filename_DIFI = os.path.join(baseDir, "coefs", "difi-coefs.txt")
-#     swarm_data = SwarmL2_MIO_SHA_Read_v2.SwarmL2_MIO_SHA_Read_v2(filename_DIFI)
-
-#     return swarm_data
-# @lru_cache(maxsize=1)
-# def load_swarm() -> dict:
-#     print("this is importing difi 8")
-#     baseDir = os.path.dirname(__file__)
-#     filename_DIFI = os.path.join(baseDir, "coefs", "DIFI8.DBL")
-#     swarm_data = SwarmL2_MIO_SHA_Read_v2.SwarmL2_MIO_SHA_Read_v2(filename_DIFI)
-
-#     return swarm_data
-
 @lru_cache(maxsize=1)
 def load_swarm_DIFI7() -> dict:
     baseDir = os.path.dirname(__file__)
@@ -45,6 +29,10 @@ def load_swarm_DIFI8() -> dict:
 
 @lru_cache(maxsize=1)
 def load_swarm_xDIFI() -> dict:
+    """
+    This function is called in this file to import 
+    xDIFI coefficients
+    """
     baseDir = os.path.dirname(__file__)
     filename_DIFI = os.path.join(baseDir, "coefs", "xDIFI2.DBL")
     swarm_data = SwarmL2_MIO_SHA_Read_v2.SwarmL2_MIO_SHA_Read_v2(filename_DIFI)

@@ -47,11 +47,11 @@ def getSQfield(lat: Union[float, list], lon: Union[float, list], year: Union[int
     # end_time = float(get_f107_index.difi_t_f107[-1])
     sq_t = jd2000_dt.jd2000_dt(year, month, day, hour, minutes)
     if (sq_t < 5114.0):
-        print("importing coeff from xdifi")
+        """("importing coeff from xdifi")"""
         from DIFI import get_f107_index_xDIFI as get_f107_index
         end_time = float(get_f107_index.difi_t_f107[-1])
     else:
-        print("importing coeff from difi8")
+        """("importing coeff from difi8")"""
         from DIFI import get_f107_index_DIFI8 as get_f107_index
         end_time = float(get_f107_index.difi_t_f107[-1])
     if f107_1 is None:
@@ -70,9 +70,7 @@ def getSQfield(lat: Union[float, list], lon: Union[float, list], year: Union[int
         f107_1,
         get_f107_index.swarm_data
     )
-    # print "Difi output", B_1, B_2
     B_C = B_1 + B_2
-    # B_C = B_1
     B_XYZ['Z'] = -1 * B_C[0]
     B_XYZ['Y'] = B_C[2]
     B_XYZ['X'] = -1 * B_C[1]

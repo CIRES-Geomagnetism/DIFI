@@ -36,6 +36,9 @@ def getSQfield(lat: Union[float, list], lon: Union[float, list], year: Union[int
 
     Output:
         B, the magnetic field due to the SQ in WGS-84 coordinates
+
+    Further Description:
+        This function will always import xDIFI regardless of date
     """
 
     earth_radius_km = 6371.2
@@ -74,9 +77,7 @@ def getSQfield(lat: Union[float, list], lon: Union[float, list], year: Union[int
         f107_1,
         get_f107_index.swarm_data
     )
-    # print "Difi output", B_1, B_2
     B_C = B_1 + B_2
-    # B_C = B_1
     B_XYZ['Z'] = -1 * B_C[0]
     B_XYZ['Y'] = B_C[2]
     B_XYZ['X'] = -1 * B_C[1]
