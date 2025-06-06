@@ -40,7 +40,8 @@ def load_swarm_xDIFI() -> dict:
     return swarm_data
 
 difi_t_f107, difi_f107 = load_coefs()
-swarm_data = load_swarm_DIFI8()
+#swarm_data_difi = load_swarm_DIFI8()
+#swarm_data_xdifi = load_swarm_xDIFI()
 
 def get_f107_index(sq_t: list, start_time: float, end_time: float) ->np.ndarray:
 

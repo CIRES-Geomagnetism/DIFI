@@ -54,6 +54,7 @@ def getSQfield(lat: Union[float, list], lon: Union[float, list], year: Union[int
         """("importing coeff from difi8")"""
         from DIFI import get_f107_index_DIFI8 as get_f107_index
         end_time = float(get_f107_index.difi_t_f107[-1])
+        swarm_data_difi = get_f107_index.load_swarm_DIFI8()
     if f107_1 is None:
         f107_1 = get_f107_index.get_f107_index(sq_t, start_time, end_time)
     else:
@@ -68,7 +69,7 @@ def getSQfield(lat: Union[float, list], lon: Union[float, list], year: Union[int
         lon,
         sq_t,
         f107_1,
-        get_f107_index.swarm_data
+        swarm_data_difi
     )
     B_C = B_1 + B_2
     B_XYZ['Z'] = -1 * B_C[0]

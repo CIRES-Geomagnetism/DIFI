@@ -62,6 +62,8 @@ def getSQfield(lat: Union[float, list], lon: Union[float, list], year: Union[int
     from DIFI import get_f107_index_xDIFI as get_f107_index
     end_time = float(get_f107_index.difi_t_f107[-1])
 
+
+
     if f107_1 is None:
         f107_1 = get_f107_index.get_f107_index(sq_t, start_time, end_time)
     else:
