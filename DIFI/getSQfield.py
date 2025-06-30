@@ -10,7 +10,16 @@ from geomaglib import util, magmath
 from typing import Optional, Union
 
 
-def getSQfield(lat: Union[float, list], lon: Union[float, list], year: Union[int, list], month: Union[int, list], day: Union[int, list], hour: Union[int, list]=0, minutes: Union[int, list]=0, h: Union[float, list]=0, f107_1: Optional[Union[float, list]]=None, model_name: Optional[Union[str]]="xdifi2", geoc:Optional[bool] = False, return_geoc:Optional[bool] = False) -> dict:
+def theta_to_geod_lat(theta: float) -> float:
+
+    f = 1 / 298.257223563
+    inv_f = 1 / (1 - f)
+    lat = np.arctan(inv_f * inv_f * np.tan(np.radians(theta)))
+    lat = np.degrees(lat)
+
+    return lat
+
+def getSQfield(lat: Union[float, list], lon: Union[float, list], year: Union[int, list], month: Union[int, list], day: Union[int, list], hour: Union[int, list]=0, minutes: Union[int, list]=0, h: Union[float, list]=0,r: Union[float, list]=0, f107_1: Optional[Union[float, list]]=None, model_name: Optional[Union[str]]="xdifi2", geoc:Optional[bool] = False, return_geoc:Optional[bool] = False) -> dict:
     """
     Input:
         Latitude, lat (in WGS-84 coordinates)
@@ -41,9 +50,10 @@ def getSQfield(lat: Union[float, list], lon: Union[float, list], year: Union[int
         r_gc, theta_gc = util.geod_to_geoc_lat(lat, h)
     else:
         theta_gc = lat
-        r_gc = earth_radius_km + h
+        r_gc = r
+
     
-    r_gc = earth_radius_km + h
+    # r_gc = earth_radius_km + h
     cotheta_gc = 90 - theta_gc
 
     start_time = 0#5114.0
@@ -95,11 +105,13 @@ def getSQfield(lat: Union[float, list], lon: Union[float, list], year: Union[int
     B_XYZ['X'] = -1 * B_C[1]
 
     if not return_geoc:
+        if geoc:
+            lat = theta_to_geod_lat(lat)
         Bx, By, Bz = magmath.rotate_magvec(B_XYZ['X'], B_XYZ['Y'], B_XYZ['Z'], theta_gc, lat)
 
         B_XYZ["X"] = Bx
         B_XYZ["Y"] = By
         B_XYZ["Z"] = Bz
     else:
-        print("B_XYZ values are returning in geocentric coord")
+        print("B_XYZ values are returning in geocentric (NEC) coord")
     return B_XYZ
