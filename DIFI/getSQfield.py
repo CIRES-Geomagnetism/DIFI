@@ -32,6 +32,10 @@ def getSQfield(lat: Union[float, list], lon: Union[float, list], year: Union[int
         An array of hours, hour
         An array of minutes, minutes
         Height above WGS84 ellipsoid, h
+        Radius in geocentric coordinates, r
+        Name of DIFI model, DIFI8,xDIFI2, DIFI7, model_name
+        Treat inputs as geocentric (must use r input, not h), geoc
+        Return geocentric B, return_geoc
 
     Output:
         B, the magnetic field due to the SQ in WGS-84 coordinates
