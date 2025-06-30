@@ -1,5 +1,5 @@
 import numpy as np
-from DIFI import getSQfield_geoc
+from DIFI.getSQfield import getSQfield
 def parse_sq_input_output(filepath):
     import re
     import numpy as np
@@ -39,7 +39,7 @@ def parse_sq_input_output(filepath):
 inputs = parse_sq_input_output('tests/test_val_above_SQ.txt')
 # print("inptuts", inputs)
 inputs['theta_1'] = 90 - np.array(inputs['theta_1'])
-B = getSQfield_geoc.getSQfield_geoc(inputs['theta_1'], inputs['phi_1'], year = 2014, month = 3, day = 21, hour = 12, h = inputs['r_1']-6371.2,f107_1 = inputs['f107_1'] )
+B = getSQfield(inputs['theta_1'], inputs['phi_1'], year = 2014, month = 3, day = 21, hour = 12, h = inputs['r_1']-6371.2,f107_1 = inputs['f107_1'], model_name = 'difi8', geoc = True )
 Bx = -B['X']
 By = B['Y']
 Bz = -B['Z']
@@ -55,4 +55,4 @@ for i in range(0, len(Bx)):
     # print("By diff, mine/mat/diff", By[i], True_By[i], By[i] - True_By[i])
     error.append(By[i] - True_By[i])
 error = np.array(error)
-print("average error in inputs is", np.average(error))
+print("average error in outputs between matlab test values and python is", np.average(error))

@@ -2,6 +2,8 @@ import os
 import numpy as np
 from functools import lru_cache
 from DIFI import getSQfield, SwarmL2_F107_Read, SwarmL2_MIO_SHA_Read_v2
+from typing import Optional, Union
+
 
 @lru_cache(maxsize=1)
 def load_coefs() -> tuple[list, list]:
@@ -10,7 +12,7 @@ def load_coefs() -> tuple[list, list]:
     difi_t_f107, difi_f107 = SwarmL2_F107_Read.SwarmL2_F107_Read(filename_f107)
 
     return difi_t_f107, difi_f107
-
+1
 @lru_cache(maxsize=1)
 def load_swarm_DIFI7() -> dict:
     """
@@ -39,10 +41,11 @@ def load_swarm_xDIFI() -> dict:
 
     return swarm_data
 
-difi_t_f107, difi_f107 = load_coefs()
-swarm_data = load_swarm_DIFI7()
 
-def get_f107_index(sq_t: list, start_time: float, end_time: float) ->np.ndarray:
+# difi_t_f107, difi_f107 = load_coefs()
+# swarm_data = load_swarm_DIFI7()
+
+def get_f107_index(sq_t: list, start_time: float, end_time: float, difi_f107: Union[float,list], difi_t_f107: Union[float,list]) ->np.ndarray:
 
     frac_arr = sq_t - np.floor(sq_t)
     f107_1 = np.array([])
@@ -50,11 +53,11 @@ def get_f107_index(sq_t: list, start_time: float, end_time: float) ->np.ndarray:
     for i in range(np.size(sq_t)):
         if sq_t[i] < start_time:
             raise Exception(
-                "Request before 2014.0 reached difi calculation improper"
+                "Request before year 2000, out of DIFI's valid date range"
             )
         elif sq_t[i] > end_time:
             raise Exception(
-                "Request after 2026.0 reached difi calculation improperly"
+                "Request after year 2026, out of DIFI's valid date range"
             )
         while sq_t[i] < 5114.0:
             sq_t[i] += 365
@@ -67,3 +70,4 @@ def get_f107_index(sq_t: list, start_time: float, end_time: float) ->np.ndarray:
         )
 
     return f107_1
+
