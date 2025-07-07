@@ -1,7 +1,7 @@
-# DIFI-7 IONOSPHERE MAGNETIC FIELD MODEL
+# DIFI-8 IONOSPHERE MAGNETIC FIELD MODEL
 
 The Dedicated Ionospheric Field Inversion (DIFI) model is a Swarm-based, global model of the Sq and equatorial electrojet magnetic fields at mid and low-latitudes. It describes variations with local time, season and solar flux and separates primary and induced magnetic fields.
-The latest version of DIFI is DIFI-7. Please see the [DIFI-7](https://geomag.colorado.edu/difi-7) for the detail.
+The latest version of DIFI is DIFI-8. Please see the [DIFI-8](https://geomag.colorado.edu/index.php/node/785) for the detail. Find info on xDIFI2 [here](https://geomag.colorado.edu/index.php/node/786).
 
 ## Prerequirements
 
