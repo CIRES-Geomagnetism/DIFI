@@ -51,14 +51,14 @@ def get_f107_index(sq_t: list, start_time: float, end_time: float, difi_f107: Un
     f107_1 = np.array([])
 
     for i in range(np.size(sq_t)):
-        if sq_t[i] < start_time:
-            raise Exception(
-                "Request before year 2000, out of DIFI's valid date range"
-            )
-        elif sq_t[i] > end_time:
-            raise Exception(
-                "Request after year 2026, out of DIFI's valid date range"
-            )
+        # if sq_t[i] < start_time:
+        #     raise Exception(
+        #         "Request before year 2000, out of DIFI's valid date range"
+        #     )
+        # elif sq_t[i] > end_time:
+        #     raise Exception(
+        #         "Request after year 2026, out of DIFI's valid date range"
+        #     )
         while sq_t[i] < 5114.0:
             sq_t[i] += 365
         j = 0

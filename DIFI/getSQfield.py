@@ -63,7 +63,11 @@ def getSQfield(lat: Union[float, list], lon: Union[float, list], year: Union[int
     start_time = 0#5114.0
     # print("trying to use model_name", model_name, model_name.lower())
     # end_time = float(get_f107_index.difi_t_f107[-1])
+
     sq_t = jd2000_dt.jd2000_dt(year, month, day, hour, minutes)
+    warn_year_2001 = jd2000_dt.jd2000_dt(2001, 1, 1, 0, 0)
+    warn_year_2014= jd2000_dt.jd2000_dt(2014, 1, 1, 0, 0)    
+    warn_year_2024= jd2000_dt.jd2000_dt(2024, 1, 1, 0, 0)
 
     if (model_name.lower() == 'xdifi2'):
         """("importing coeff from xdifi")"""
@@ -72,13 +76,23 @@ def getSQfield(lat: Union[float, list], lon: Union[float, list], year: Union[int
         difi_t_f107, difi_f107 = load_coefs()
         swarm_data = load_swarm_xDIFI()
         end_time = float(difi_t_f107[-1])
+        if np.any(sq_t < warn_year_2001):
+            warnings.warn("Dataset contains date before 2001.0, outside xDIFI2's reccomended range")
+        if np.any(sq_t > warn_year_2024):
+            warnings.warn("Dataset contains date after 2024.0, outside xDIFI2's reccomended range")
     elif (model_name.lower() == 'difi8'):
         """("importing coeff from difi8")"""
         from DIFI.get_f107_index_all import get_f107_index, load_coefs, load_swarm_DIFI8
         difi_t_f107, difi_f107 = load_coefs()
         swarm_data = load_swarm_DIFI8()
         end_time = float(difi_t_f107[-1])
+        if np.any(sq_t < warn_year_2014):
+            warnings.warn("Dataset contains date before 2014.0, outside DIFI8's reccomended range")
+        if np.any(sq_t > warn_year_2024):
+            warnings.warn("Dataset contains date after 2024.0, outside DIFI8's reccomended range")
+
     elif (model_name.lower() == 'difi7'):
+        raise ValueError("Difi 7 is not supported since the release of difi8")
         """("importing coeff from difi8")"""
         from DIFI.get_f107_index_all import get_f107_index, load_coefs, load_swarm_DIFI7
         difi_t_f107, difi_f107 = load_coefs()
