@@ -6,7 +6,7 @@ import numpy as np
 
 from DIFI.getSQfield import getSQfield
 from DIFI import jd2000_dt
-from DIFI import get_f107_index
+from DIFI import get_f107_index_all
 
 # The data files will be in the same directory as this test script
 inputs_file_path = Path(__file__).parent / "20250319_outputs_inputs_difi_pypidifi7.csv"
@@ -122,6 +122,20 @@ class test_getSQfield(unittest.TestCase):
                             B_expect = Bxyz_expected[cmpnt]
                             self.assertAlmostEqual(B_test[0],B_expect[0],places=6)
                             self.assertAlmostEqual(B_test[1],B_expect[1],places=6)
+
+    def test_time_range(self):
+
+        lat = 25
+        lon = 100
+        year, month, day = 2000, 1, 1
+        h = 100
+
+        with self.assertWarns(UserWarning) as w:
+            B = getSQfield(lat, lon, year, month, day, h=h, hour = 0, minutes=0, model_name="xDIFI2")
+
+
+
+
                             
         
             
