@@ -29,4 +29,7 @@ jobs:
 
     - name: Compare with main branch
       run: |
-        python -m unittest tests/Test_outputs.py
+        python -m unittest tests/test_getSQfield.py
+        python tests/validate_xdifi2.py
+        python tests/validate_difi8.py
+        python tests/validate_above_sq_current.py
