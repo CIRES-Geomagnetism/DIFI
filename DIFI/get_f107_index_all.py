@@ -51,6 +51,7 @@ def get_f107_index(sq_t: list, start_time: float, end_time: float, difi_f107: Un
     f107_1 = np.array([])
 
     for i in range(np.size(sq_t)):
+
         if sq_t[i] < start_time:
             raise Exception(
                 "This package does not contain f10.7 data before WHAT IS THE EARLIEST DATTEeeeeee. Input time data contains a date corresponding to f10.7 data not contained in this package"
@@ -59,11 +60,14 @@ def get_f107_index(sq_t: list, start_time: float, end_time: float, difi_f107: Un
             raise Exception(
                 "This package does not contain f10.7 data after noon 12/31/2026 . Input time data contains a date corresponding to f10.7 data not contained in this package"
             )
+
         while sq_t[i] < 5114.0:
             sq_t[i] += 365
         j = 0
+
         while difi_t_f107[j] < sq_t[i]:
             j += 1
+
         f107_1 = np.append(
             f107_1,
             difi_f107[j] * frac_arr[i] + difi_f107[j - 1] * (1 - frac_arr[i])
