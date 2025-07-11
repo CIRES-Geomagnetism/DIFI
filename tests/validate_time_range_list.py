@@ -1,6 +1,7 @@
 import numpy as np
 from DIFI.getSQfield import getSQfield
 
+
 def parse_geomagnetic_data(filepath):
     # Define column labels
     keys = [
