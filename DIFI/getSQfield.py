@@ -56,18 +56,22 @@ def getSQfield(lat: Union[float, list], lon: Union[float, list], year: Union[int
         theta_gc = lat
         r_gc = r
 
-    
-    # r_gc = earth_radius_km + h
     cotheta_gc = 90 - theta_gc
 
     start_time = 0#5114.0
-    # print("trying to use model_name", model_name, model_name.lower())
-    # end_time = float(get_f107_index.difi_t_f107[-1])
 
     sq_t = jd2000_dt.jd2000_dt(year, month, day, hour, minutes)
     warn_year_2001 = jd2000_dt.jd2000_dt(2001, 1, 1, 0, 0)
     warn_year_2014= jd2000_dt.jd2000_dt(2014, 1, 1, 0, 0)    
     warn_year_2024= jd2000_dt.jd2000_dt(2024, 1, 1, 0, 0)
+    end_DIFI_valid = 9496.5
+
+    if np.any(sq_t) > end_DIFI_valid:
+        raise Exception(
+            "DIFI is not valid after noon 12/31/2026 . Input time data contains a date outside DIFI's validity range."
+        )
+    start_f107_time = jd2000_dt.jd2000_dt(2000, 1, 1, 0, 0)
+    end_f107_time =  jd2000_dt.jd2000_dt(2025, 1, 1, 0, 0) 
 
     if (model_name.lower() == 'xdifi2'):
         """("importing coeff from xdifi")"""
@@ -102,7 +106,7 @@ def getSQfield(lat: Union[float, list], lon: Union[float, list], year: Union[int
         raise ValueError("Input model_name = difi8, xdifi2, or difi7. Input model name didn't match any models.")
     
     if f107_1 is None:
-        f107_1 = get_f107_index(sq_t, start_time, end_time, difi_f107, difi_t_f107)
+        f107_1 = get_f107_index(sq_t, start_f107_time, end_f107_time, difi_f107, difi_t_f107)
     else:
         f107_1 = np.array(f107_1).flatten()
         
