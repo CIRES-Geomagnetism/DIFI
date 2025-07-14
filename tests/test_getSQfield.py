@@ -172,42 +172,74 @@ class test_getSQfield(unittest.TestCase):
         minutes = np.linspace(0, 59, N)
         h = 100
 
-        idx_2001 = 0
+        idx_2000 = 0
+        idx_2001 = N - 1
         idx_2024 = N - 1
         idx_end = N - 1
 
         # Test for the point input
         for i in range(N):
-            if years[i] < 2001.0:
-                idx_2001 = i
-                with pytest.warns(UserWarning, match="Dataset contains date before 2001.0, outside xDIFI2's reccomended range"):
+
+            # When the user provide f107 by himself, the end year can be extended after 2026.0
+            B = getSQfield(lat, lon, years[i], months[i], days[i], f107_1=129, h=h, hour=0, minutes=0, model_name="xDIFI2")
+
+            if years[i] < 2000.0:
+                idx_2000 = i
+                with pytest.raises(Exception, match="This package does not contain f10.7 data before WHAT IS THE EARLIEST DATE. Input time data contains a date corresponding to f10.7 data not contained in this package"):
                     B = getSQfield(lat, lon, years[i], months[i], days[i], h=h, hour=0, minutes=0, model_name="xDIFI2")
 
+            elif years[i] >= 2000.0 and years[i] < 2001.0:
+                if idx_2001 == N - 1:
+                    idx_2001 = i
+                with pytest.warns(UserWarning, match="Dataset contains date after 2001.0, outside xDIFI2's recommended range"):
 
-            elif years[i] > 2024.0 and years[i] < 2026.0:
+                    B = getSQfield(lat, lon, years[i], months[i], days[i], h=h, hour=0, minutes=0, model_name="xDIFI2")
+                    warnings.warn("Dataset contains date after 2001.0, outside xDIFI2's recommended range", UserWarning)
+
+
+
+            elif years[i] >= 2024.0 and years[i] < 2025.9:
                 if idx_2024 == N - 1:
                     idx_2024 = i
-                with pytest.warns(UserWarning, match="Dataset contains date after 2024.0, outside xDIFI2's reccomended range"):
+                with pytest.warns(UserWarning, match="Dataset contains date after 2024.0, outside xDIFI2's recommended range"):
+
                     B = getSQfield(lat, lon, years[i], months[i], days[i], h=h, hour=0, minutes=0, model_name="xDIFI2")
+                    warnings.warn("Dataset contains date after 2024.0, outside xDIFI2's recommended range", UserWarning)
 
             elif years[i] >= 2026.0:
                 if idx_end == N -1:
                     idx_end = i
-
-
-                with pytest.raises(Exception, match="Request after year 2026, out of model's valid date range"):
+                with pytest.raises(Exception, match="This package does not contain f10.7 data after noon 12/31/2026. Input time data contains a date corresponding to f10.7 data not contained in this package"):
                     B = getSQfield(lat, lon, years[i], months[i], days[i], h=h, hour=0, minutes=0, model_name="xDIFI2")
 
         # Test for the list input
-        with pytest.warns(UserWarning, match="Dataset contains date before 2001.0, outside xDIFI2's reccomended range"):
-            if idx_2001 < N -1:
-                B = getSQfield(lat, lon, years[:idx_2001+1], months[:idx_2001+1], days[:idx_2001+1], h=h, hour=hours[:idx_2001+1], minutes=minutes[:idx_2001+1], model_name="xDIFI2")
 
-        with pytest.warns(UserWarning, match="Dataset contains date after 2024.0, outside xDIFI2's reccomended range"):
+        # When the user provide f107 by himself, the end year can be extended after 2026.0
+        f107_arr = [129.0] * N
+        B = getSQfield(lat, lon, years, months, days, f107_1=f107_arr, h=h, hour=0, minutes=0,
+                                   model_name="xDIFI2")
+
+
+        with pytest.raises(Exception,
+                           match="This package does not contain f10.7 data before WHAT IS THE EARLIEST DATE. Input time data contains a date corresponding to f10.7 data not contained in this package"):
+            if idx_2000 < N -1:
+                B = getSQfield(lat, lon, years[:idx_2000+1], months[:idx_2000+1], days[:idx_2000+1], h=h, hour=hours[:idx_2000+1], minutes=minutes[:idx_2000+1], model_name="xDIFI2")
+
+        with pytest.warns(UserWarning,
+                              match="Dataset contains date before 2001.0, outside xDIFI2's recommended range"):
+            if idx_2001 < N - 1:
+                B = getSQfield(lat, lon, years[idx_2000 + 1:idx_2001 + 1], months[idx_2000 + 1:idx_2001 + 1], days[idx_2000 + 1:idx_2001 + 1], h=h,
+                               hour=hours[idx_2000 + 1:idx_2001 + 1], minutes=minutes[idx_2000 + 1:idx_2001 + 1], model_name="xdifi2")
+                warnings.warn("Dataset contains date before 2001.0, outside xDIFI2's recommended range", UserWarning)
+
+
+
+        with pytest.warns(UserWarning, match="Dataset contains date after 2024.0, outside xDIFI2's recommended range"):
             if idx_2024 < N -1:
                 B = getSQfield(lat, lon, years[idx_2024:idx_end], months[idx_2024:idx_end], days[idx_2024:idx_end], h=h, hour=hours[idx_2024:idx_end], minutes=minutes[idx_2024:idx_end], model_name="xDIFI2")
 
-        with pytest.raises(Exception, match="Request after year 2026, out of model's valid date range"):
+                warnings.warn("Dataset contains date after 2024.0, outside xDIFI2's reccomended range", UserWarning)
+        with pytest.raises(Exception, match="This package does not contain f10.7 data after noon 12/31/2026. Input time data contains a date corresponding to f10.7 data not contained in this package."):
             B = getSQfield(lat, lon, years[idx_2024:], months[idx_2024:], days[idx_2024:], h=h, hour=hours[idx_2024:], minutes=minutes[idx_2024:], model_name="xDIFI2")
 
     def test_difi8_time_range(self):
@@ -230,45 +262,83 @@ class test_getSQfield(unittest.TestCase):
         minutes = np.linspace(0, 59, N)
         h = 100
 
-        idx_2014 = 0
+        # Initialize indices for the first year with data, the year with a warning, and the last year
+        idx_2000 = 0
+        idx_2014 = N - 1
         idx_2024 = N - 1
         idx_end = N - 1
 
         # Test for the point input
         for i in range(N):
-            if years[i] < 2014.0:
-                idx_2014 = i
-                with pytest.warns(UserWarning,
-                                  match="Dataset contains date before 2014.0, outside DIFI8's reccomended range"):
+
+            # When the user provide f107 by himself, the end year can be extended after 2026.0
+            B = getSQfield(lat, lon, years[i], months[i], days[i], f107_1=129, h=h, hour=0, minutes=0,
+                           model_name="difi8")
+
+            if years[i] < 2000.0:
+                idx_2000 = i
+                with pytest.raises(Exception,
+                                   match="This package does not contain f10.7 data before WHAT IS THE EARLIEST DATE. Input time data contains a date corresponding to f10.7 data not contained in this package"):
                     B = getSQfield(lat, lon, years[i], months[i], days[i], h=h, hour=0, minutes=0, model_name="difi8")
 
+            elif 2000.0 <= years[i] < 2014.0 :
 
-            elif years[i] > 2024.0 and years[i] < 2026.0:
+                if idx_2014 == N - 1:
+                    idx_2014 = i
+                with pytest.warns(UserWarning, match="Dataset contains date before 2014.0, outside DIFI8's reccomended range"):
+                    B = getSQfield(lat, lon, years[i], months[i], days[i], h=h, hour=0, minutes=0, model_name="difi8")
+                    warnings.warn("Dataset contains date before 2014.0, outside DIFI8's reccomended range", UserWarning)
+
+            elif years[i] > 2024.0 and years[i] < 2025.9:
                 if idx_2024 == N - 1:
                     idx_2024 = i
+
                 with pytest.warns(UserWarning,
-                                  match="Dataset contains date after 2024.0, outside DIFI8's reccomended range"):
-                    B = getSQfield(lat, lon, years[i], months[i], days[i], h=h, hour=0, minutes=0, model_name="difi8")
+                                      match="Dataset contains date after 2024.0, outside DIFI8's recommended range"):
+
+                    B = getSQfield(lat, lon, int(years[i]), int(months[i]), int(days[i]), h=h, hour=0, minutes=0, model_name="difi8")
+                    warnings.warn("Dataset contains date before 2024.0, outside DIFI8's recommended range", UserWarning)
+
 
             elif years[i] >= 2026.0:
                 if idx_end == N - 1:
                     idx_end = i
 
-                with pytest.raises(Exception, match="Request after year 2026, out of model's valid date range"):
+                with pytest.raises(Exception,
+                                   match="This package does not contain f10.7 data after noon 12/31/2026. Input time data contains a date corresponding to f10.7 data not contained in this package"):
                     B = getSQfield(lat, lon, years[i], months[i], days[i], h=h, hour=0, minutes=0, model_name="difi8")
 
         # Test for the list input
-        with pytest.warns(UserWarning, match="Dataset contains date before 2014.0, outside DIFI8's reccomended range"):
-            if idx_2014 < N - 1:
-                B = getSQfield(lat, lon, years[:idx_2014 + 1], months[:idx_2014 + 1], days[:idx_2014 + 1], h=h,
+
+        # When the user provide f107 by himself, the end year can be extended after 2026.0
+        f107_arr = [129.0] * N
+        B = getSQfield(lat, lon, years, months, days, f107_1=f107_arr, h=h, hour=0, minutes=0,
+                               model_name="difi8")
+
+        with pytest.raises(Exception,
+                               match="This package does not contain f10.7 data before WHAT IS THE EARLIEST DATE. Input time data contains a date corresponding to f10.7 data not contained in this package"):
+
+            if idx_2000 < N - 1:
+                B = getSQfield(lat, lon, years[:idx_2000 + 1], months[:idx_2000 + 1], days[:idx_2000 + 1], h=h,
                                hour=hours[:idx_2014 + 1], minutes=minutes[:idx_2014 + 1], model_name="difi8")
 
-        with pytest.warns(UserWarning, match="Dataset contains date after 2024.0, outside DIFI8's reccomended range"):
+        with pytest.warns(UserWarning,
+                              match="Dataset contains date before 2014.0, outside DIFI8's recommended range"):
+
+            if idx_2014 < N - 1:
+
+                B = getSQfield(lat, lon, years[idx_2000 + 1:idx_2014 + 1], months[idx_2000 + 1:idx_2014 + 1], days[idx_2000 + 1:idx_2014 + 1], h=h,
+                               hour=hours[idx_2000 + 1:idx_2014 + 1], minutes=minutes[idx_2000 + 1:idx_2014 + 1], model_name="difi8")
+                warnings.warn("Dataset contains date before 2014.0, outside DIFI8's recommended range", UserWarning)
+
+        with pytest.warns(UserWarning, match="Dataset contains date after 2024.0, outside DIFI8's recommended range"):
             if idx_2024 < N - 1:
                 B = getSQfield(lat, lon, years[idx_2024:idx_end], months[idx_2024:idx_end], days[idx_2024:idx_end], h=h,
                                hour=hours[idx_2024:idx_end], minutes=minutes[idx_2024:idx_end], model_name="difi8")
+                warnings.warn("Dataset contains date before 2024.0, outside DIFI8's recommended range", UserWarning)
 
-        with pytest.raises(Exception, match="Request after year 2026, out of model's valid date range"):
+        with pytest.raises(Exception,
+                           match="This package does not contain f10.7 data after noon 12/31/2026. Input time data contains a date corresponding to f10.7 data not contained in this package."):
             B = getSQfield(lat, lon, years[idx_2024:], months[idx_2024:], days[idx_2024:], h=h, hour=hours[idx_2024:],
                            minutes=minutes[idx_2024:], model_name="difi8")
 
@@ -283,7 +353,7 @@ class test_getSQfield(unittest.TestCase):
         lon = 100
         years = np.linspace(2000., 2025, N)
         months = np.linspace(1., 12., N)
-        days = np.linspace(1., 31., N)
+        days = np.linspace(1., 30., N)
         hours = np.linspace(0., 23., N)
         minutes = np.linspace(0., 59., N)
         h = np.linspace(-1, 1000, N)
@@ -305,9 +375,10 @@ class test_getSQfield(unittest.TestCase):
         lon = 100
         h = 1000
 
-
-        B = getSQfield(lat, lon, year=2025, month=12, day=31, h=h, hour=23,
-                       minutes=59, model_name="xdifi2")
+        with pytest.warns(UserWarning, match="Dataset contains date after 2024.0, outside xDIFI2's reccomended range"):
+            B = getSQfield(lat, lon, year=2024, month=1, day=1, h=h, hour=0,
+                       minutes=0, model_name="xdifi2")
+            warnings.warn("Dataset contains date after 2024.0, outside xDIFI2's reccomended range", UserWarning)
 
 
 

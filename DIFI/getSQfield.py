@@ -71,7 +71,7 @@ def getSQfield(lat: Union[float, list], lon: Union[float, list], year: Union[int
             "DIFI is not valid after noon 12/31/2026 . Input time data contains a date outside DIFI's validity range."
         )
     start_f107_time = jd2000_dt.jd2000_dt(2000, 1, 1, 0, 0)
-    end_f107_time =  jd2000_dt.jd2000_dt(2025, 1, 1, 0, 0) 
+    end_f107_time =  jd2000_dt.jd2000_dt(2025, 12, 31, 12, 30)
 
     if (model_name.lower() == 'xdifi2'):
         """("importing coeff from xdifi")"""
@@ -81,9 +81,10 @@ def getSQfield(lat: Union[float, list], lon: Union[float, list], year: Union[int
         swarm_data = load_swarm_xDIFI()
         end_time = float(difi_t_f107[-1])
         if np.any(sq_t < warn_year_2001):
-            warnings.warn("Dataset contains date before 2001.0, outside xDIFI2's reccomended range")
-        if np.any(sq_t > warn_year_2024):
-            warnings.warn("Dataset contains date after 2024.0, outside xDIFI2's reccomended range")
+            warnings.warn("Dataset contains date before 2001.0, outside xDIFI2's recommended range", UserWarning)
+        if np.any(sq_t >= warn_year_2024):
+
+            warnings.warn("Dataset contains date after 2024.0, outside xDIFI2's recommended range", UserWarning)
     elif (model_name.lower() == 'difi8'):
         """("importing coeff from difi8")"""
         from DIFI.get_f107_index_all import get_f107_index, load_coefs, load_swarm_DIFI8
@@ -91,9 +92,9 @@ def getSQfield(lat: Union[float, list], lon: Union[float, list], year: Union[int
         swarm_data = load_swarm_DIFI8()
         end_time = float(difi_t_f107[-1])
         if np.any(sq_t < warn_year_2014):
-            warnings.warn("Dataset contains date before 2014.0, outside DIFI8's reccomended range")
-        if np.any(sq_t > warn_year_2024):
-            warnings.warn("Dataset contains date after 2024.0, outside DIFI8's reccomended range")
+            warnings.warn("Dataset contains date before 2014.0, outside DIFI8's recommended range")
+        if np.any(sq_t >= warn_year_2024):
+            warnings.warn("Dataset contains date after 2024.0, outside DIFI8's recommended range")
 
     elif (model_name.lower() == 'difi7'):
         raise ValueError("Difi 7 is not supported since the release of difi8")
