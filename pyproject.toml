@@ -2,14 +2,20 @@
 name = "pyDIFI"
 version = "7.2.0"
 authors = [
-  { name="Li-Yin Young", email="liyin.young@noaa.gov" },
+    { name="Collin Kadlecek", email="Collin.Kadlecek@colorado.edu" },
+  { name="Li-Yin Young", email="liyin.young@colorado.edu" },
   { name="Liam Kilcommons", email="liam.kilcommons@colorado.edu" }
 ]
-description = "The python module for DIFI-7"
+description = "The python module for DIFI-8"
 readme = "README.md"
 #requires-python = ">=3.11"
 classifiers = [
     "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
 ]
