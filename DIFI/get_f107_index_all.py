@@ -54,11 +54,11 @@ def get_f107_index(sq_t: list, start_time: float, end_time: float, difi_f107: Un
 
         if sq_t[i] < start_time:
             raise Exception(
-                "This package does not contain f10.7 data before WHAT IS THE EARLIEST DATE. Input time data contains a date corresponding to f10.7 data not contained in this package."
+                "This package does not contain f10.7 data before 01/01/2000. Input time data contains a date corresponding to f10.7 data not contained in this package."
             )
         elif sq_t[i] > end_time:
             raise Exception(
-                "This package does not contain f10.7 data after noon 12/31/2026. Input time data contains a date corresponding to f10.7 data not contained in this package."
+                "This package does not contain f10.7 data after noon 12/31/2025. Input time data contains a date corresponding to f10.7 data not contained in this package."
             )
 
         while sq_t[i] < 5114.0:
