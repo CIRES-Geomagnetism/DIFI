@@ -23,11 +23,12 @@ if __name__ == '__main__':
     
     start_time = 0#5114.0
     year = [2000,2001,2025]
-    month = [1,3,12]
-    day = [1,4,31]
-    hour = [1,18,23]
-    minutes = [1,18,59]
+    month = [1,1,12]
+    day = [1,1,31]
+    hour = [1,12,23]
+    minutes = [1,0,59]
     sq_t = jd2000_dt.jd2000_dt(year, month, day, hour, minutes)
+    # print(sq_t)
     warn_year_2001 = jd2000_dt.jd2000_dt(2001, 1, 1, 0, 0)
     warn_year_2014= jd2000_dt.jd2000_dt(2014, 1, 1, 0, 0)    
     warn_year_2024= jd2000_dt.jd2000_dt(2024, 1, 1, 0, 0)
@@ -49,4 +50,15 @@ if __name__ == '__main__':
     end_time = float(difi_t_f107[-1])
 
     f107_1 = get_f107_index(sq_t, start_f107_time, end_f107_time, difi_f107, difi_t_f107)
-    assert(np.abs(np.sum(np.array(f107_1) - np.array([129.9 ,152.285 ,222.24])) < 1e-15))
+
+    # print(f107_1)
+    # sq_t = np.linspace(3900, 4000, 10000)
+    # f107_1 = get_f107_index(sq_t, start_f107_time, end_f107_time, difi_f107, difi_t_f107)
+    # import matplotlib.pyplot as plt
+    # plt.plot(sq_t, f107_1)
+    # plt.xlabel('days/jd2000 time')
+    # plt.ylabel('f107 magnitude')
+    # plt.grid()
+    # plt.show()
+    assert(np.abs(np.sum(np.array(f107_1) - np.array([129.9 ,171 ,222.24])) < 1e-15))
+    print("f107 was read properly")
