@@ -47,7 +47,7 @@ if __name__ == '__main__':
 
     B = getSQfield(lat, lon,years, 
                     months, days, hour= hours, minutes=minutes ,
-                    h = 0,f107_1 = 100, 
+                    h = 0, 
                     model_name = 'xdifi2')
     
     years = np.linspace(2014, 2024, N)

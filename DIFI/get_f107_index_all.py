@@ -48,10 +48,11 @@ def load_swarm_xDIFI() -> dict:
 def get_f107_index(sq_t: list, start_time: float, end_time: float, difi_f107: Union[float,list], difi_t_f107: Union[float,list]) ->np.ndarray:
 
     frac_arr = sq_t - np.floor(sq_t)
+    print("what is frac_arr", frac_arr)
     f107_1 = np.array([])
 
     for i in range(np.size(sq_t)):
-
+        print(sq_t[i])
         if sq_t[i] < start_time:
             raise Exception(
                 "This package does not contain f10.7 data before 01/01/2000. Input time data contains a date corresponding to f10.7 data not contained in this package."
@@ -60,11 +61,9 @@ def get_f107_index(sq_t: list, start_time: float, end_time: float, difi_f107: Un
             raise Exception(
                 "This package does not contain f10.7 data after noon 12/31/2025. Input time data contains a date corresponding to f10.7 data not contained in this package."
             )
-
-        while sq_t[i] < 5114.0:
+        while sq_t[i] < 0:
             sq_t[i] += 365
         j = 0
-
         while difi_t_f107[j] < sq_t[i]:
             j += 1
 
