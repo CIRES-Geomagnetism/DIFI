@@ -71,7 +71,7 @@ def getSQfield(lat: Union[float, list], lon: Union[float, list], year: Union[int
             "DIFI is not valid after noon 12/31/2026 . Input time data contains a date outside DIFI's validity range."
         )
     start_f107_time = jd2000_dt.jd2000_dt(2000, 1, 1, 0, 0)
-    end_f107_time =  jd2000_dt.jd2000_dt(2025, 12, 31, 12, 30)
+    end_f107_time =  jd2000_dt.jd2000_dt(2026, 1, 1, 12, 30)
 
     if (model_name.lower() == 'xdifi2'):
         """("importing coeff from xdifi")"""

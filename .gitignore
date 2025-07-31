@@ -13,3 +13,4 @@ DIFI/__pycache__/
 DIFI.egg-info/
 dist/
 build/
+pyDIFI.egg-info
