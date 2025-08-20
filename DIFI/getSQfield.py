@@ -56,6 +56,7 @@ def getSQfield(lat: Union[float, list], lon: Union[float, list], year: Union[int
     h = np.array(h).flatten()
     if not geoc:
         r_gc, theta_gc = util.geod_to_geoc_lat(lat, h)
+        warnings.warn("Warning: The altitude is within 30 km of 110 km, where the model switches between internal and external ionospheric current sources. The model is not expected to accurately represent the field within this transition zone.")
     else:
         theta_gc = lat
         r_gc = r
