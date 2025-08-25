@@ -122,8 +122,8 @@ def getSQfield(lat: Union[float, list], lon: Union[float, list], year: Union[int
     # calculate radii in units of reference radius
     a = 6371.2
     rho_Sq = (a + swarm_data['h']) / a
-    rho = r_gc / a
-    if (min(rho) < rho_Sq) and (max(rho) >= rho_Sq):#If min below SQ and max above SQ
+    rho = np.array(r_gc / a)
+    if (np.min(rho) < rho_Sq) and (np.max(rho) >= rho_Sq):#If min below SQ and max above SQ
         #Split dataset into above and below SQ
         above_SQ_mask = rho < rho_Sq
         below_SQ_mask = rho >= rho_Sq

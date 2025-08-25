@@ -25,7 +25,7 @@ def parse_geomagnetic_data(filepath):
 
 
 data = parse_geomagnetic_data("tests/test_values_DIFI8_v1_20250528.txt")
-print(data[0])
+# print(data[0])
 max_diff = 0.0
 
 for i in range(0, len(data)):

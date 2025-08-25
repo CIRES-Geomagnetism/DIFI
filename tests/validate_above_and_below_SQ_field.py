@@ -122,7 +122,22 @@ for model_name in models:
         #     print(np.abs(ansX[i] - B["X"][i]), ansX[i] ,  B["X"][i])
         #     print(np.abs(ansY[i] - B["Y"][i]), ansY[i] ,  B["Y"][i])
         #     print(np.abs(ansZ[i] - B["Z"][i]), ansZ[i] ,  B["Z"][i])
-
+    B = getSQfield(lat[0], lon[0], year[0], 
+                    month[0], day[0], hour=hour[0],
+                        minutes = minute[0], h = h[0],f107_1 = f107[0], 
+                        model_name = model_name)
+    below_ans = np.load(f"tests/{model_name}_below_SQ_test_values.npy", allow_pickle= True)
+    above_ans = np.load(f"tests/{model_name}_after_SQ_test_values.npy", allow_pickle= True)
+    ansX = []
+    ansY = []
+    ansZ = []
+    ansX.extend(below_ans[0])
+    ansY.extend(below_ans[1])
+    ansZ.extend(below_ans[2])
+    
+    ansX.extend(above_ans[0])
+    ansY.extend(above_ans[1])
+    ansZ.extend(above_ans[2])
     #Create inputs which have span above and below the SQ field
     
     # for i in range(0, len(data)):
