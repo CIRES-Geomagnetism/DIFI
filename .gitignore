@@ -14,3 +14,5 @@ DIFI.egg-info/
 dist/
 build/
 pyDIFI.egg-info
+
+tests/*.npy

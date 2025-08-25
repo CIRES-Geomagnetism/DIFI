@@ -1,6 +1,6 @@
 [project]
 name = "pyDIFI"
-version = "8.0.0"
+version = "8.1.0"
 authors = [
     { name="Collin Kadlecek", email="Collin.Kadlecek@colorado.edu" },
   { name="Li-Yin Young", email="liyin.young@colorado.edu" },
