@@ -2,7 +2,7 @@ name: difi pull request pipeline
 
 on:
   push:
-    branches: ["difi8_and_xDIFI"]
+    branches: ["Above_Below_SQfield"]
 
 jobs:
   test:
@@ -26,6 +26,8 @@ jobs:
     - name: Compare with main branch
       run: |
         python -m unittest tests/test_getSQfield.py
+        python -m unittest tests/test_validate_inputs.py
         python tests/validate_xdifi2.py
         python tests/validate_difi8.py
         python tests/validate_above_sq_current.py
+        python tests/validate_above_and_below_SQ_field.py
