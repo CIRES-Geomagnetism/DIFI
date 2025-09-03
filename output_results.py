@@ -43,6 +43,13 @@ def out_difi_new(outfile, lats, lons, hours, year, month, day):
         B = new_sqfield(lats, lons, year, month, day, hour=hours)
         for i in range(0, len(B['X'])):
             file.write(str(B['X'][i]) + "," + str(B['Y'][i]) + "," + str(B['Z'][i]) + "\n")
+
+        try:
+            import matplotlib.pyplot as plt
+            plt.plot(range(0,len(lats)), B["Z"])
+            plt.show()
+        except:
+            print("can't plot output because user doesn't have matplotlib install. OPTIONAL Run pip install matplotlib or conda install matplotlib to see this output")
         # for lat in lats:
         #     for lon in lons:
         #         for hour in hours:
@@ -56,9 +63,9 @@ def out_difi_new(outfile, lats, lons, hours, year, month, day):
 
 def main():
 
-    N_datapoints = 1000
-    lats = np.linspace(-90,90, N_datapoints)
-    lons = np.linspace(-180, 180, N_datapoints)
+    N_datapoints = 4000
+    lats = np.linspace(40,40, N_datapoints)
+    lons = np.linspace(180, 180, N_datapoints)
     year = np.ones(N_datapoints)*2020
     month = np.ones(N_datapoints)*6
     days = [1,2,3,4]
@@ -68,7 +75,7 @@ def main():
         day_fill = np.ones(N_datapoints//len(days))*day
         day_gatherer.extend(day_fill)
         hour_gatherer.extend(np.linspace(0,23.99, len(day_fill)))
-
+    # print(hour_gatherer)
     hours = np.array(hour_gatherer)
     day = np.array(day_gatherer)
 
