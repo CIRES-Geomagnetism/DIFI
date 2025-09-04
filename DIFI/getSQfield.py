@@ -54,13 +54,15 @@ def getSQfield(lat: Union[float, list], lon: Union[float, list], year: Union[int
     lat = np.array(lat).flatten()
     lon = np.array(lon).flatten()
     h = np.array(h).flatten()
-    if not geoc:
-        r_gc, theta_gc = util.geod_to_geoc_lat(lat, h)
-        if np.any(np.abs((r_gc - 6371.2) - 110) < 30):
-            warnings.warn("Warning: The altitude is within 30 km of 110 km, where the model switches between internal and external ionospheric current sources. The model is not expected to accurately represent the field within this transition zone.")
-    else:
+    
+    if not geoc: #input `lat` is assumed geo*detic*, input `h` is used, input `r` is ignored
+        r_gc, theta_gc = util.geod_to_geoc_lat(lat, h) #convert geodetic latitude and ellipsoidal height to geocentric lat and radius (distance from center of earth to your location)
+    else: #input `lat` is assumed be geo*centric* latitude, input `r` is used as geocentric radius (distance from center of earth to your location), input `h` is ignored
         theta_gc = lat
         r_gc = r
+
+    if np.any(np.abs((r_gc - 6371.2) - 110) < 30):
+        warnings.warn("Warning: The altitude is within 30 km of 110 km, where the model switches between internal and external ionospheric current sources. The model is not expected to accurately represent the field within this transition zone.")
 
     cotheta_gc = 90 - theta_gc
 
