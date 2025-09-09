@@ -30,34 +30,4 @@ def main():
     point_inputs()
 
 if __name__ == "__main__":
-    # def getSQfield(lat: Union[float, list], lon: Union[float, list], year: Union[int, list], 
-    #                month: Union[int, list], day: Union[int, list], hour: Union[int, list]=0, 
-    #                minutes: Union[int, list]=0, h: Union[float, list]=0,r: Union[float, list]=0, 
-    #                f107_1: Optional[Union[float, list]]=None, model_name: Optional[Union[str]]="xdifi2", 
-    #                geoc:Optional[bool] = False, return_geoc:Optional[bool] = False) -> dict:
-
-    N_datapoints = 1000
-    lat = 0*np.ones(N_datapoints)
-    lon = 20*np.ones(N_datapoints)
-    alt = np.ones(N_datapoints)
-    year = np.int64(np.linspace(2023,2023,N_datapoints))
-    month = np.int64(np.linspace(4,4,N_datapoints))
-    day = np.int64(np.linspace(6,13,N_datapoints))
-    y = 12*np.sin(np.linspace(0,14*np.pi, N_datapoints)) + 12
-    hour = np.int64(24*np.sin(day*np.pi))
-    plt.plot(np.linspace(0,2*np.pi, N_datapoints),y, label = 'artificial')
-    plt.plot(day,hour, label = "supposed to be clock")
-    plt.legend()
-    plt.show()
-    # hour = np.int64(np.linspace(0,23,N_datapoints))
-
-    minute = np.int64(np.linspace(0,0,N_datapoints))
-    second = np.int64(np.linspace(0,0,N_datapoints))
-    out_b = getSQfield(lat, lon, year, month, day, hour = hour)
-    plt.plot(day, out_b['Z'])
-    plt.show()
-    plt.plot(day, out_b['X'])
-    plt.show()
-    plt.plot(day, out_b['Y'])
-    plt.show()
-    # main()
+    main()
