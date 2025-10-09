@@ -4,7 +4,7 @@ import numpy as np
 import os
 
 from DIFI import jd2000_dt
-from DIFI import forward_Sq_d_Re
+from DIFI import forward_Sq_d_Re_gg2mv2
 # from DIFI import get_f107_index
 from geomaglib import util, magmath
 from typing import Optional, Union
@@ -130,13 +130,13 @@ def getSQfield(lat: Union[float, list], lon: Union[float, list], year: Union[int
         #Split dataset into above and below SQ
         above_SQ_mask = rho < rho_Sq
         below_SQ_mask = rho >= rho_Sq
-
+        # print('rioiarsnt\n\n\n',r_gc[above_SQ_mask], 
         # cotheta_gc[above_SQ_mask], lon[above_SQ_mask], sq_t[above_SQ_mask], f107_1[above_SQ_mask], 
-
-        [above_output1, above_output2] = forward_Sq_d_Re.forward_Sq_d_Re(r_gc[above_SQ_mask], 
+        # swarm_data)
+        [above_output1, above_output2] = forward_Sq_d_Re_gg2mv2.forward_Sq_d_Re(r_gc[above_SQ_mask], 
         cotheta_gc[above_SQ_mask], lon[above_SQ_mask], sq_t[above_SQ_mask], f107_1[above_SQ_mask], 
         swarm_data)
-        [below_output1, below_output2] = forward_Sq_d_Re.forward_Sq_d_Re(r_gc[below_SQ_mask], 
+        [below_output1, below_output2] = forward_Sq_d_Re_gg2mv2.forward_Sq_d_Re(r_gc[below_SQ_mask], 
         cotheta_gc[below_SQ_mask], lon[below_SQ_mask], sq_t[below_SQ_mask], f107_1[below_SQ_mask], 
         swarm_data)
         B_1,B_2 = np.zeros((3, len(r_gc))), np.zeros((3, len(r_gc)))
@@ -146,7 +146,8 @@ def getSQfield(lat: Union[float, list], lon: Union[float, list], year: Union[int
         B_2[:, above_SQ_mask] = above_output2
         B_2[:, below_SQ_mask] = below_output2
     else:
-        [B_1, B_2] = forward_Sq_d_Re.forward_Sq_d_Re(
+        # print("Swarm data",swarm_data)
+        [B_1, B_2] = forward_Sq_d_Re_gg2mv2.forward_Sq_d_Re(
             r_gc,
             cotheta_gc,
             lon,

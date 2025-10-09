@@ -8,8 +8,15 @@ from DIFI import forward_Sq_d_Re
 # from DIFI import get_f107_index
 from geomaglib import util, magmath
 from typing import Optional, Union
+from multiprocessing import Process, Queue
 
+def worker(r_gc_chunk, cotheta_gc_chunk, lon_chunk, sq_t_chunk, f107_chunk, swarm_data, queue, chunk_start, chunk_end):
 
+    tmp_B_1, tmp_B_2 = forward_Sq_d_Re.forward_Sq_d_Re(
+        r_gc_chunk, cotheta_gc_chunk, lon_chunk, sq_t_chunk, f107_chunk, swarm_data
+    )
+    queue.put((chunk_start, chunk_end,tmp_B_1, tmp_B_2))
+    
 def theta_to_geod_lat(theta: float) -> float:
 
     f = 1 / 298.257223563
@@ -130,9 +137,9 @@ def getSQfield(lat: Union[float, list], lon: Union[float, list], year: Union[int
         #Split dataset into above and below SQ
         above_SQ_mask = rho < rho_Sq
         below_SQ_mask = rho >= rho_Sq
-
+        # print('rioiarsnt\n\n\n',r_gc[above_SQ_mask], 
         # cotheta_gc[above_SQ_mask], lon[above_SQ_mask], sq_t[above_SQ_mask], f107_1[above_SQ_mask], 
-
+        # swarm_data)
         [above_output1, above_output2] = forward_Sq_d_Re.forward_Sq_d_Re(r_gc[above_SQ_mask], 
         cotheta_gc[above_SQ_mask], lon[above_SQ_mask], sq_t[above_SQ_mask], f107_1[above_SQ_mask], 
         swarm_data)
@@ -146,14 +153,44 @@ def getSQfield(lat: Union[float, list], lon: Union[float, list], year: Union[int
         B_2[:, above_SQ_mask] = above_output2
         B_2[:, below_SQ_mask] = below_output2
     else:
-        [B_1, B_2] = forward_Sq_d_Re.forward_Sq_d_Re(
-            r_gc,
-            cotheta_gc,
-            lon,
-            sq_t,
-            f107_1,
-            swarm_data
-        )
+        # zeros_data = np.full((N_Data_Frac * n_loops - N_data), np.nan)
+        # print("how big is zeros", np.shape(zeros_data))
+        
+        # r_gc = np.reshape(np.concatenate((r_gc, zeros_data)), (N_Data_Frac, n_loops))
+        # cotheta_gc = np.reshape(np.concatenate((cotheta_gc, zeros_data)), (N_Data_Frac, n_loops))
+        # lon = np.reshape(np.concatenate((lon, zeros_data)), (N_Data_Frac, n_loops))
+        # sq_t = np.reshape(np.concatenate((sq_t, zeros_data)), (N_Data_Frac, n_loops))
+        # f107_1 = np.reshape(np.concatenate((f107_1, zeros_data)), (N_Data_Frac, n_loops))
+        max_chunk_size = 3000
+        B_1, B_2 = np.zeros((3,len(r_gc))), np.zeros((3,len(r_gc)))
+        processes = []
+        queue = Queue()
+
+        for chunk_start in range(0, len(r_gc), max_chunk_size):
+            chunk_end = min(chunk_start + max_chunk_size, len(r_gc))
+
+            chunk_args = (
+                r_gc[chunk_start:chunk_end],
+                cotheta_gc[chunk_start:chunk_end],
+                lon[chunk_start:chunk_end],
+                sq_t[chunk_start:chunk_end],
+                f107_1[chunk_start:chunk_end],
+                swarm_data,
+                queue,
+                chunk_start, chunk_end
+            )
+            p = Process(target=worker, args=chunk_args)
+            processes.append((p))
+            p.start()
+
+        for p in processes:
+
+            chunk_start, chunk_end,tmp_B_1, tmp_B_2 = queue.get()  # receive result from child process
+            B_1[:,chunk_start:chunk_end] = tmp_B_1
+            B_2[:,chunk_start:chunk_end] = tmp_B_2
+        for p in processes:
+            p.join()
+    print("now it goes here right?")
     B_C = B_1 + B_2
     B_XYZ['Z'] = -1 * B_C[0]
     B_XYZ['Y'] = B_C[2]

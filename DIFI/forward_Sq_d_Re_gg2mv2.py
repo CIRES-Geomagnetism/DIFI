@@ -5,10 +5,133 @@ from typing import Union
 
 from DIFI import jd2000_dt
 from DIFI import getmut
-from DIFI import gg2gm_2010
+from DIFI.gg2gm_2010_arg_pole import gg2gm_2010 
 from DIFI import design_SHA_Sq_i_Re_v2
 from DIFI import design_SHA_Sq_e_Re_v2
 
+
+# def gg2gm(theta_gg, phi_gg, *args):
+# 	"""
+# 	Transformation between geographic and geomagnetic (dipole) coordinates and components.
+	
+# 	Usage (mirrors MATLAB):
+# 	theta_gm, phi_gm = gg2gm(theta_gg, phi_gg)
+# 	theta_gm, phi_gm = gg2gm(theta_gg, phi_gg, i_trans)
+# 	theta, phi, B_theta, B_phi = gg2gm(theta_in, phi_in, i_trans, B_theta, B_phi)
+# 	theta, phi, B_theta, B_phi = gg2gm(theta_in, phi_in, i_trans, B_theta, B_phi, [theta_b, phi_b])
+# 	theta, phi, B_theta, B_phi = gg2gm(theta_in, phi_in, i_trans, B_theta, B_phi, [g10, g11, h11])
+# 	theta, phi, R = gg2gm(theta_in, phi_in, i_trans=+1)   # R is 2x2 rotation matrix
+# 	"""
+
+# 	rad = np.pi / 180.0
+# 	theta_gg = np.atleast_1d(theta_gg).astype(float)
+# 	phi_gg = np.atleast_1d(phi_gg).astype(float)
+
+# 	# Defaults
+# 	i_trans = +1
+# 	if len(args) >= 1:
+# 		i_trans = args[0]
+# 	if abs(i_trans) != 1:
+# 		raise ValueError("i_trans should be +1 or -1")
+
+# 	# Pole definition
+# 	if len(args) >= 3 and args[2] is not None:
+# 		tmp = np.asarray(args[2]).flatten()
+# 		if len(tmp) == 2:  # [theta_b, phi_b]
+# 			theta_b, phi_b = tmp
+# 		elif len(tmp) == 3:  # [g10, g11, h11]
+# 			g10, g11, h11 = tmp
+# 			phi_b = np.degrees(np.arctan2(-h11, -g11))
+# 			theta_b = np.degrees(np.arctan2(np.sqrt(g11**2 + h11**2), -g10))
+# 		else:
+# 			raise ValueError("Argument 6 must be [theta_b, phi_b] or [g10, g11, h11]")
+# 	else:
+# 		theta_b, phi_b = 9.92, 287.78  # epoch 2010.0 (IGRF-11)
+
+# 	s_p_b, c_p_b = np.sin(phi_b*rad), np.cos(phi_b*rad)
+# 	c_t_b, s_t_b = np.cos(theta_b*rad), np.sin(theta_b*rad)
+
+# 	A = np.array([
+# 		[ c_t_b*c_p_b,  c_t_b*s_p_b, -s_t_b],
+# 		[       -s_p_b,        c_p_b,     0],
+# 		[ s_t_b*c_p_b,  s_t_b*s_p_b,  c_t_b]
+# 	])
+# 	if i_trans == -1:
+# 		A = A.T
+
+# 	# GEO spherical -> cartesian
+# 	c_t, s_t = np.cos(theta_gg*rad), np.sin(theta_gg*rad)
+# 	c_p, s_p = np.cos(phi_gg*rad),   np.sin(phi_gg*rad)
+
+# 	z = c_t
+# 	x = s_t * c_p
+# 	y = s_t * s_p
+
+# 	x_gm = A[0,0]*x + A[0,1]*y + A[0,2]*z
+# 	y_gm = A[1,0]*x + A[1,1]*y + A[1,2]*z
+# 	z_gm = A[2,0]*x + A[2,1]*y + A[2,2]*z
+
+# 	theta_gm = 90 - np.degrees(np.arctan2(z_gm, np.sqrt(x_gm**2 + y_gm**2)))
+# 	phi_gm = np.mod(np.degrees(np.arctan2(y_gm, x_gm)), 360.0)
+
+# 	outputs = [theta_gm, phi_gm]
+
+# 	# Handle B_theta, B_phi transformation if provided
+# 	if len(args) >= 3 and args[1] is not None:
+# 		B_theta = np.asarray(args[1])
+# 		B_phi   = np.asarray(args[2])
+
+# 		BE = B_theta * c_t
+# 		Bx = BE * c_p - B_phi * s_p
+# 		By = BE * s_p + B_phi * c_p
+# 		Bz = -B_theta * s_t
+
+# 		Bx_gm = A[0,0]*Bx + A[0,1]*By + A[0,2]*Bz
+# 		By_gm = A[1,0]*Bx + A[1,1]*By + A[1,2]*Bz
+# 		Bz_gm = A[2,0]*Bx + A[2,1]*By + A[2,2]*Bz
+
+# 		c_t2, s_t2 = np.cos(theta_gm*rad), np.sin(theta_gm*rad)
+# 		c_p2, s_p2 = np.cos(phi_gm*rad), np.sin(phi_gm*rad)
+
+# 		BE2 = Bx_gm * c_p2 + By_gm * s_p2
+# 		B_theta_out = BE2 * c_t2 - Bz_gm * s_t2
+# 		B_phi_out   = By_gm * c_p2 - Bx_gm * s_p2
+
+# 		outputs += [B_theta_out, B_phi_out]
+
+# 	# Handle R matrix if nargout == 3 in MATLAB
+# 	if len(outputs) == 2 and i_trans == 1:
+# 		# Build R as in MATLAB
+# 		c_t, s_t = np.cos(theta_gg*rad), np.sin(theta_gg*rad)
+# 		c_p, s_p = np.cos(phi_gg*rad),   np.sin(phi_gg*rad)
+# 		N = len(c_p)
+
+# 		# GEO spherical -> cartesian
+# 		R1 = np.zeros((N, 3, 3))
+# 		R1[:,0,:] = np.stack([s_t*c_p, c_t*c_p, -s_p], axis=-1)
+# 		R1[:,1,:] = np.stack([s_t*s_p, c_t*s_p,  c_p], axis=-1)
+# 		R1[:,2,:] = np.stack([c_t,     -s_t,    np.zeros(N)], axis=-1)
+
+# 		# MAG cartesian -> spherical
+# 		c_tg, s_tg = np.cos(theta_gm*rad), np.sin(theta_gm*rad)
+# 		c_pg, s_pg = np.cos(phi_gm*rad),   np.sin(phi_gm*rad)
+
+# 		R2 = np.zeros((N, 3, 3))
+# 		R2[:,0,:] = np.stack([s_tg*c_pg, s_tg*s_pg, c_tg], axis=-1)
+# 		R2[:,1,:] = np.stack([c_tg*c_pg, c_tg*s_pg, -s_tg], axis=-1)
+# 		R2[:,2,:] = np.stack([-s_pg,     c_pg,     np.zeros(N)], axis=-1)
+
+# 		# MAG->GEO matrix
+# 		R_mag_geo = np.zeros((N, 3, 3))
+# 		R_mag_geo[:,0,:] = np.array([c_t_b*c_p_b, c_t_b*s_p_b, -s_t_b])
+# 		R_mag_geo[:,1,:] = np.array([-s_p_b,      c_p_b,       0])
+# 		R_mag_geo[:,2,:] = np.array([s_t_b*c_p_b, s_t_b*s_p_b, c_t_b])
+
+# 		R_tmp = np.einsum('nij,njk->nik', R_mag_geo, R1)
+# 		R3 = np.einsum('nij,njk->nik', R2, R_tmp)
+# 		outputs.append(R3[:,1:3,1:3])  # only horizontal 2x2 block
+
+# 	return tuple(outputs)
 
 def forward_Sq_d_Re(r: Union[float, list], theta: Union[float, list], phi: Union[float, list], t: Union[float, list], f107: Union[float, list], s: dict) -> tuple[np.ndarray, np.ndarray]:
     # [B_1,B_2] = forward_Sq_d_Re(r,theta,phi,t,f107,s)
@@ -120,7 +243,7 @@ def forward_Sq_d_Re(r: Union[float, list], theta: Union[float, list], phi: Union
     t_season = t_season.flatten()
     t_mut = getmut.getmut(t, s['theta_NGP'], s['phi_NGP'])
     # calculate dipolar coordinates + matrix R
-    theta_d, phi_d, rotmat = gg2gm_2010.gg2gm_2010(theta, phi, get_R=True)
+    theta_d, phi_d, rotmat = gg2gm_2010(theta, phi, get_R=True, theta_b=s['theta_NGP'], phi_b = s['phi_NGP'])
 
     arr_internal = np.array(
         design_SHA_Sq_i_Re_v2.design_SHA_Sq_i_Re_v2(
