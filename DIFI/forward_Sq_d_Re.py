@@ -120,7 +120,7 @@ def forward_Sq_d_Re(r: Union[float, list], theta: Union[float, list], phi: Union
     t_season = t_season.flatten()
     t_mut = getmut.getmut(t, s['theta_NGP'], s['phi_NGP'])
     # calculate dipolar coordinates + matrix R
-    theta_d, phi_d, rotmat = gg2gm_2010.gg2gm_2010(theta, phi, get_R=True)
+    theta_d, phi_d, rotmat = gg2gm_2010.gg2gm_2010(theta, phi, get_R=True, theta_b=s['theta_NGP'], phi_b = s['phi_NGP'])
 
     arr_internal = np.array(
         design_SHA_Sq_i_Re_v2.design_SHA_Sq_i_Re_v2(

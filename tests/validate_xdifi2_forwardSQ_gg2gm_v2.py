@@ -1,6 +1,7 @@
 import numpy as np
 # from DIFI import get_SQ_field_TESTING_ONLY as getSQfield
-from DIFI.getSQfield import getSQfield
+from DIFI.getSQfield_test_forward import getSQfield
+from DIFI import forward_Sq_d_Re
 
 def parse_geomagnetic_data(filepath):
     # Define column labels
@@ -22,11 +23,21 @@ def parse_geomagnetic_data(filepath):
     return data
 
 data = parse_geomagnetic_data("tests/test_values_xDIFI2_v1_20250928.txt")
+print(data[0])
 max_diff = 0.0
-
+temp = []
+tmp = []
+print(len(data))
+for i in range(0,len(data)):
+    temp.append(data[i]['theta'])
+    tmp.append(data[i]['lat'])
+print(np.min(temp), np.max(temp))
+print(np.min(tmp), np.max(tmp))
+print(data[0]['h'])
+# raise ValueError("kshjl")
 for i in range(0, len(data)):
-    B = getSQfield(data[i]['lat'], data[i]['lon'], data[i]['year'], data[i]['month'], data[i]['day'], hour=data[i]['hour'], minutes = data[i]['min'], h= data[i]['h'],f107_1 = data[i]['F10.7'], model_name='xdifi2')
-
+    B = getSQfield(data[i]['lat'], data[i]['lon'], data[i]['year'], data[i]['month'], data[i]['day'], hour=data[i]['hour'], minutes = data[i]['min'], h= data[i]['h'],f107_1 = data[i]['F10.7'], model_name='xdifi2')#, return_geoc=True, geoc=True, r = data[i]['r'])
+    # print('True Bx and calc Bx',B['X'], data[i]['X'], data[i]["B_theta"])
     if B['X'] != data[i]['X']:
          max_diff = max(max_diff, np.abs(B['X'] - data[i]['X']))
     if B['Y'] != data[i]['Y']:

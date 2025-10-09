@@ -10,7 +10,9 @@ def gg2gm_2010(
     phi_gm=None,
     B_theta=None,
     B_phi=None,
-    get_R: bool=False
+    get_R: bool=False, 
+    theta_b = 9.92,
+    phi_b = 287.78
 ):
     # transformation between geographic (geocentric as opposed to geodetic)
     # and geomagnetic (dipole) co-ordinates
@@ -36,6 +38,8 @@ def gg2gm_2010(
     # (Arnaud Chulliat, IPGP)
     # December 2016: translated to python
     # (Adam Woods, NCEI)
+    # October 2025: changed pole location to be argument | Default IGRF 2010 pole
+    # (Collin Kadlecek, NCEI)
 
     rad = math.pi / 180
 
@@ -58,10 +62,6 @@ def gg2gm_2010(
             "Need either values for phi_gg and theta_gg xor phi_gm and "
             "theta_gm, not neither or both"
         )
-
-    # Initialization: coordinates of geomagnetic North pole as of 2010
-    theta_b = 9.92
-    phi_b = 287.78
 
     s_p_b = np.sin(phi_b*rad)
     c_p_b = np.cos(phi_b*rad)

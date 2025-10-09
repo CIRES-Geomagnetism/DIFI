@@ -23,7 +23,7 @@ def parse_geomagnetic_data(filepath):
 if __name__ == '__main__':
     #all input dates are within time range, no warnings should print
     model_name = 'difi8'
-    data = parse_geomagnetic_data(f"tests/test_values_{model_name}_v1_20250528.txt")
+    data = parse_geomagnetic_data(f"tests/test_values_{model_name}_v1_20250928.txt")
     lat, lon, year, month, day, hour, minute, h, f107 = [],[],[],[],[],[],[],[],[]
     for i in range(0,len(data)):
         lat.append(data[i]['lat'])

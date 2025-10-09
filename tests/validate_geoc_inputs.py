@@ -24,7 +24,7 @@ def parse_geomagnetic_data(filepath):
     return data
 
 
-data = parse_geomagnetic_data("tests/test_values_DIFI8_v1_20250528.txt")
+data = parse_geomagnetic_data("tests/test_values_DIFI8_v1_20250928.txt")
 # print(data[0])
 max_diff = 0.0
 
