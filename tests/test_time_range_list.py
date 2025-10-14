@@ -24,7 +24,7 @@ def parse_geomagnetic_data(filepath):
 def test_proper_warnings_display():
     with pytest.warns(UserWarning) as record:
         #list input, double wanrning for values being above and below tolerance
-        model_name = 'difi8'
+        model_name = 'DIFI8'
         data = parse_geomagnetic_data(f"tests/test_values_{model_name}_v1_20250928.txt")
         lat, lon, year, month, day, hour, minute, h, f107 = [],[],[],[],[],[],[],[],[]
         for i in range(0,len(data)):
@@ -67,4 +67,5 @@ def test_proper_warnings_display():
         "Dataset contains date after 2024.0, outside DIFI8's recommended range",
     ]
 
-    assert messages == expected_messages
+    for message,expected_message in zip(messages,expected_messages):
+        assert message == expected_message

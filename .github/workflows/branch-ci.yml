@@ -22,12 +22,8 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
         pip install -e .
+        pip install pytest
 
     - name: Compare with main branch
       run: |
-        python -m unittest tests/test_getSQfield.py
-        python -m unittest tests/test_validate_inputs.py
-        python tests/validate_xdifi2.py
-        python tests/validate_difi8.py
-        python tests/validate_above_sq_current.py
-        python tests/validate_above_and_below_SQ_field.py
+        py.test
