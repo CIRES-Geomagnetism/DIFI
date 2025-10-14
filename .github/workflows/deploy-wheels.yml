@@ -77,6 +77,6 @@ jobs:
 
         with:
           files: dist/*.whl
-          draft: ${{ contains( github.ref_name, 'rc' ) }} #Create draft release if 'rc' (release candidate) in tag
+          draft: ${{ contains( github.ref_name, 'rc' ) }} #Draft if 'rc' (release candidate) in tag e.g. v1.0.0rc0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

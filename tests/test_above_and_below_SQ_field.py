@@ -103,8 +103,8 @@ def test_above_and_below_SQ():
                         month, day, hour=hour,
                             minutes = minute, h = h,f107_1 = f107, 
                             model_name = model_name)
-        below_ans = np.load(f"tests/{model_name}_below_SQ_test_values.npy", allow_pickle= True)
-        above_ans = np.load(f"tests/{model_name}_after_SQ_test_values.npy", allow_pickle= True)
+        below_ans = np.load(f"tests/{model_name}_below_SQ_test_values.npy", allow_pickle= False)
+        above_ans = np.load(f"tests/{model_name}_after_SQ_test_values.npy", allow_pickle= False)
         ansX = []
         ansY = []
         ansZ = []
@@ -128,8 +128,8 @@ def test_above_and_below_SQ():
                         month[0], day[0], hour=hour[0],
                             minutes = minute[0], h = h[0],f107_1 = f107[0], 
                             model_name = model_name)
-        below_ans = np.load(f"tests/{model_name}_below_SQ_test_values.npy", allow_pickle= True)
-        above_ans = np.load(f"tests/{model_name}_after_SQ_test_values.npy", allow_pickle= True)
+        below_ans = np.load(f"tests/{model_name}_below_SQ_test_values.npy", allow_pickle= False)
+        above_ans = np.load(f"tests/{model_name}_after_SQ_test_values.npy", allow_pickle= False)
         ansX = []
         ansY = []
         ansZ = []
