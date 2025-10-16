@@ -120,7 +120,7 @@ def forward_Sq_d_Re(r: Union[float, list], theta: Union[float, list], phi: Union
     t_season = t_season.flatten()
     t_mut = getmut.getmut(t, s['theta_NGP'], s['phi_NGP'])
     # calculate dipolar coordinates + matrix R
-    theta_d, phi_d, rotmat = gg2gm_2010.gg2gm_2010(theta, phi, get_R=True)
+    theta_d, phi_d, rotmat = gg2gm_2010.gg2gm_2010(theta, phi, get_R=True, theta_b=s['theta_NGP'], phi_b = s['phi_NGP'])
 
     arr_internal = np.array(
         design_SHA_Sq_i_Re_v2.design_SHA_Sq_i_Re_v2(
@@ -152,9 +152,31 @@ def forward_Sq_d_Re(r: Union[float, list], theta: Union[float, list], phi: Union
 
     # CASE #1: above Sq currents
     if (min(rho) > rho_Sq):
+        #=========Above SQ coeff shift=======
+        mmax = s['mmax']
+        nmax = s['nmax']
+        N_nm = mmax * (mmax + 2) + (nmax - mmax) * (2 * mmax + 1)
+        f = np.zeros((N_nm))  
+        i1 = 0  
+
+        for n in range(1, nmax + 1):
+            nr = min(2 * n + 1, 2 * mmax + 1)
+            f[i1:i1 + nr] = -n / (n + 1) * rho_Sq ** (2 * n + 1)
+            i1 += nr
+        N_sp = len(p_vec) * len(s_vec)
+        f = np.tile(f, (2 * N_sp, 1))
+        N_coeff_nm = 2 * N_nm * N_sp
+        coeff_shape = np.shape(s['m_e_d_Re'])
+        f = f.flatten()
+        m_e_d_Re = np.reshape(s['m_e_d_Re'],N_coeff_nm,'F')
+        m_e_d_Re_C = m_e_d_Re * f  # elementwise multiply (broadcasts like bsxfun)
+        
+        m_e_d_Re_C = np.reshape(m_e_d_Re_C,coeff_shape,'F')
+
+        #=========Above SQ coeff shift end=======
         B_1_tmp = np.einsum(
             'ij, lik, jk ->lk',
-            s['m_e_d_Re'],
+            m_e_d_Re_C,#s['m_e_d_Re'],
             arr_internal,
             time_arr,
         )

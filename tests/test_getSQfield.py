@@ -11,7 +11,7 @@ import warnings
 import pytest
 
 # The data files will be in the same directory as this test script
-inputs_file_path = Path(__file__).parent / "test_values_xDIFI2_v1_20250528.txt"
+inputs_file_path = Path(__file__).parent / "test_values_xDIFI2_v1_20250928.txt"
 
 
 

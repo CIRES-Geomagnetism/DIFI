@@ -46,19 +46,14 @@ jobs:
       - name: Download wheels
         uses: actions/download-artifact@v4
         with:
+          name: wheels-3.13
           path: dist
-
-      - name: Flatten wheel files
-        shell: bash
-        run: |
-          mkdir all_wheels
-          find dist -name '*.whl' -exec cp {} all_wheels/ \;
 
       - name: Install dependencies
         shell: bash
         run: |
           python -m pip install --upgrade pip
-          pip install all_wheels/*.whl
+          pip install --find-links ./dist DIFI
 
       - name: Test installation
         shell: bash
@@ -77,16 +72,11 @@ jobs:
         with:
           path: dist
 
-      - name: Flatten wheel files
-        run: |
-          mkdir all_wheels
-          find dist -name '*.whl' -exec cp {} all_wheels/ \;
-
-
       - name: Upload wheels to Github Release
         uses: softprops/action-gh-release@v1
 
         with:
-          files: all_wheels/*.whl
+          files: dist/*.whl
+          draft: ${{ contains( github.ref_name, 'rc' ) }} #Draft if 'rc' (release candidate) in tag e.g. v1.0.0rc0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -2,7 +2,7 @@ name: Publish to PyPI
 
 on:
   release:
-    types: [created]
+    types: [created] #Note that draft release will not trigger this type
 
 jobs:
   deploy:
