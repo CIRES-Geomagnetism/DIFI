@@ -18,7 +18,7 @@ The DIFI API is available on PYPI! If you would like to install DIFI at this tim
 
 or
 
-'pip install pyDIFI'
+`pip install pyDIFI`
 
 ## Quick Start
 
