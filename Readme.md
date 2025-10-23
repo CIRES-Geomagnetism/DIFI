@@ -12,10 +12,13 @@ The latest version of DIFI is DIFI-8. Please see the [DIFI-8](https://geomag.col
 
 
 ## Installation
-Our team will release the DIFI Python API to PyPI soon. If you would like to install DIFI at this time, please clone our git repository or use the following instructions to install DIFI in your virtual environment.
+The DIFI API is available on PYPI! If you would like to install DIFI at this time, please clone our git repository, use the following instructions to install DIFI in your virtual environment, or pip install DIFI from "pyDIFI":
 
 `pip install git+https://github.com/CIRES-Geomagnetism/DIFI.git@main`
 
+or
+
+'pip install pyDIFI'
 
 ## Quick Start
 
