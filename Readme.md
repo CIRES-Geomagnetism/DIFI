@@ -1,5 +1,10 @@
 # DIFI-8 IONOSPHERE MAGNETIC FIELD MODEL
 
+![PyPI - Version](https://img.shields.io/pypi/v/pyDifi)
+![PyPI - Python Version](https://img.shields.io/pypi/pyversions/pydifi)
+[![PyPI Downloads](https://static.pepy.tech/personalized-badge/pydifi?period=total&units=INTERNATIONAL_SYSTEM&left_color=BLACK&right_color=GREEN&left_text=downloads)](https://pepy.tech/projects/pydifi)
+![PyPI - License](https://img.shields.io/pypi/l/pydifi)
+
 The Dedicated Ionospheric Field Inversion (DIFI) model is a Swarm-based, global model of the Sq and equatorial electrojet magnetic fields at mid and low-latitudes. It describes variations with local time, season and solar flux and separates primary and induced magnetic fields.
 The latest version of DIFI is DIFI-8. Please see the [DIFI-8](https://geomag.colorado.edu/index.php/node/785) for the detail. Find info on xDIFI2 [here](https://geomag.colorado.edu/index.php/node/786).
 
@@ -12,11 +17,8 @@ The latest version of DIFI is DIFI-8. Please see the [DIFI-8](https://geomag.col
 
 
 ## Installation
-The DIFI API is available on PYPI! If you would like to install DIFI at this time, please clone our git repository, use the following instructions to install DIFI in your virtual environment, or pip install DIFI from "pyDIFI":
 
-`pip install git+https://github.com/CIRES-Geomagnetism/DIFI.git@main`
-
-or
+The recommended way to install wmm-calculator is via [pip](https://pip.pypa.io/en/stable/)
 
 `pip install pyDIFI`
 
