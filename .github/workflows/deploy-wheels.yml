@@ -1,4 +1,6 @@
 name: Release the wheels to Github Release
+# The wheel is deployed to Github release as draft when the git tag with "rc" is pushed
+# Otherwise, the wheel in only uploaded as artifact and the release is not created.
 
 on:
  push:
@@ -63,6 +65,9 @@ jobs:
 
   release:
     name: Create GitHub Release
+    # Draft if 'rc' (release candidate) in tag e.g. v1.0.0rc0.
+    # The action performed by GITHUB_TOKEN will prevent the event triggered from other workflows.
+    # To release the package to pypi, the release will be triggered manually by the user after the release is created. This is to prevent accidental releases to pypi.
     if: ${{ contains( github.ref_name, 'rc' ) }}
     runs-on: ubuntu-latest
     needs: [build_wheels, test_artifacts]
@@ -79,7 +84,6 @@ jobs:
 
         with:
           files: dist/*.whl
-          #draft: ${{ contains( github.ref_name, 'rc' ) }} #Draft if 'rc' (release candidate) in tag e.g. v1.0.0rc0
           draft: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
