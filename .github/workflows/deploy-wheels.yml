@@ -66,7 +66,8 @@ jobs:
   release:
     name: Create GitHub Release
     # Draft if 'rc' (release candidate) in tag e.g. v1.0.0rc0.
-    # The action performed by GITHUB_TOKEN will prevent the event triggered from other workflows.
+    # This is to avoid the Github secrets (i.e. secrets.GITHUB_TOKEN) was triggered when Release is created.
+    # For safety reason, the tasks performed by GITHUB_TOKEN (i.e. pushing a tag or creating a release) will not trigger further workflows to prevent infinite loops.
     # To release the package to pypi, the release will be triggered manually by the user after the release is created. This is to prevent accidental releases to pypi.
     if: ${{ contains( github.ref_name, 'rc' ) }}
     runs-on: ubuntu-latest
